@@ -1,0 +1,564 @@
+#! C:/Program Files/Nuke12.2v4/nuke-12.2.4.dll -nx
+version 12.2 v4
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="0" w="1917" h="1000" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1167" stretch="1"/>
+            <splitter orientation="2">
+                <split size="962"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="uk.co.thefoundry.scripteditor.1"/>
+                    <page id="com.adrianpueyo.KnobScripterPane"/>
+                    <page id="Viewer.1"/>
+                </dock>
+            </splitter>
+            <split size="702"/>
+            <splitter orientation="2">
+                <split size="479"/>
+                <dock id="" activePageId="Properties.1">
+                    <page id="Properties.1"/>
+                    <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+                </dock>
+                <split size="479"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                </dock>
+            </splitter>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/RobustVideoMatting.nk
+ frame 40
+ first_frame 20
+ last_frame 40
+ lock_range true
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement Nuke
+ workingSpaceLUT linear
+ monitorLut sRGB
+ int8Lut sRGB
+ int16Lut sRGB
+ logLut Cineon
+ floatLut linear
+}
+Group {
+ inputs 0
+ name Km_AI_Cleaner2
+ knobChanged "if(nuke.thisNode()\[\"preview_clean_matte\"].value()):\n    nuke.thisNode().node('Grade1')\[\"mix\"].setValue(1)\nelse:\n    nuke.thisNode().node('Grade1')\[\"mix\"].setValue(0)\n\nif(nuke.thisNode()\[\"output_image\"].value()==\"Source Input\"):\n    nuke.thisNode().node('Switch_output')\[\"which\"].setValue(0)\nelse:\n    nuke.thisNode().node('Switch_output')\[\"which\"].setValue(1)\n\nif(nuke.thisNode()\[\"output_alpha\"].value()==\"Source Input Alpha\"):\n    nuke.thisNode().node('Switch_alpha')\[\"which\"].setValue(0)\nelse:\n    nuke.thisNode().node('Switch_alpha')\[\"which\"].setValue(1)\n    \n\nif(nuke.thisNode()\[\"matte\"].value()==\"Rotopaint\"):\n    nuke.thisNode().node('Switch_clean_matte')\[\"which\"].setValue(0)\nelif(nuke.thisNode()\[\"matte\"].value()==\"Mask input\"):\n    nuke.thisNode().node('Switch_clean_matte')\[\"which\"].setValue(1)\n    \nif(nuke.thisNode()\[\"iteration\"].value()):\n    nuke.thisNode().node('Switch_iteration')\[\"which\"].setValue(1)\nelse:\n    nuke.thisNode().node('Switch_iteration')\[\"which\"].setValue(0)"
+ xpos -482
+ ypos -151
+ addUserKnob {20 User l "Km AI Cleaner"}
+ addUserKnob {4 output_image l "Output Image" M {"Source Input" Result "" "" "" "" "" "" "" ""}}
+ addUserKnob {4 output_alpha l "Output Alpha" M {"Source Input Alpha" "Clean Matte Alpha" "" "" "" ""}}
+ addUserKnob {26 text_5 l "Clean matte"}
+ addUserKnob {4 matte l Matte M {Rotopaint "Mask input" "" "" "" "" "" "" "" ""}}
+ matte "Mask input"
+ addUserKnob {6 preview_clean_matte l "Preview Clean Matte" +STARTLINE}
+ preview_clean_matte true
+ addUserKnob {41 white l "Matte Preview Color" T Grade1.white}
+ addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+ addUserKnob {26 text_6 l Run}
+ addUserKnob {6 boolean_4 l GPU +STARTLINE}
+ addUserKnob {6 iteration l "Iteration (use last result as input for the next round)" t "by this option you can refine the result. in each iteration remove older clean matte and use a new one just for portions you want to fix" +STARTLINE}
+ addUserKnob {22 btn_run l Run T "import subprocess \nimport json\nimport psutil\nimport time\nfrom PySide2.QtWidgets import *\nfrom PySide2.QtCore import Qt, QThread, Signal\nfrom PySide2.QtGui import *\nimport sys\n\n\n\nparams_file = os.environ.get('Km_AI_Plugin_Path')+\"/params.json\"\nprint(params_file)\n# Read data from JSON file\nwith open(params_file, \"r\") as file:\n    loaded_data = json.load(file)\n\n\n# current_directory = os.path.dirname(os.path.abspath(__file__))\ncurrent_directory = str(loaded_data\[\"current_data_path\"])\nBatch_Render = loaded_data\[\"Batch_Render\"]\nprint(\"batch bool?\")\nprint(Batch_Render)\n\n\nframe_to_render = nuke.frame()\n\n\nif Batch_Render :\n    print(\"start frame :::::::::::::::::: \"+loaded_data\[\"frame_number\"])    \n    print(int(loaded_data\[\"frame_number\"]))\n    frame_to_render = int(loaded_data\[\"frame_number\"])\n    #nuke.activeViewer().node()\['frame'].setValue(int(loaded_data\[\"frame_number\"]))\n    \nnuke.execute(nuke.toNode('Write_i_image'), start=frame_to_render, end=frame_to_render)\nnuke.execute(nuke.toNode('Write_i_mask'), start=frame_to_render, end=frame_to_render)\n\n\n\n# create bash command \nrun_file  = \"\\\"\" + os.environ.get('Km_AI_Plugin_Path')+'/Run.py'+ \"\\\"\"\n# python_path = '\"C:/Users/kmdesk/AppData/Local/Programs/Python/Python37/python.exe\"'\npython_path = loaded_data\[\"python_path\"]\nrun_cmd = python_path + \" \" + run_file\ncurrent_data_path = nuke.script_directory() + \"/\"+nuke.thisNode().name()+\"_Data\" \n\n\n\nprint(run_file)\nprint(current_data_path)\n\n\njson_file = os.environ.get('Km_AI_Plugin_Path')+\"/params.json\"\nwith open(json_file, 'r') as f:\n  data = json.load(f)\n\n\ndata\[\"current_data_path\"] = current_data_path\ndata\[\"frame_number\"] = str(frame_to_render).zfill(5)\ndata\[\"end_frame\"] = loaded_data\[\"end_frame\"]\ndata\[\"Batch_Render\"] = Batch_Render\n\n\n# Write data to JSON file\nwith open(json_file, \"w\") as file:\n    json.dump(data, file)\n\n\n\nwindow= QWidget()\nlayout=QVBoxLayout()\nlabel = QLabel(\"Processing\")\nlabel.setStyleSheet(\"color: orange; font-weight: bold;\")\nlabel2 = QLabel(\"CPU\")\nlabel3 = QLabel(\"RAM\")\nlabel4 = QLabel(\"If the system runs out of memory, processing will fail. So be sure you have enough free memory or make the input resolution lower.\")\nwindow.setWindowTitle(\"Km AI Cleaner\")\nwindow.setFixedWidth(300)\nlabel4.setFixedWidth(300)\nlabel4.setWordWrap(True)\n\n\n# loading spinner\nloading_label = QLabel(\"\")\nmovie = QMovie(\"C:/Users/kmdesk/Desktop/nuke test/Km_AI_Cleaner/Assets/Pulse-1s-80px (1).gif\")\nloading_label.setMovie(movie)\nmovie.start()\n# align widgets\nlabel.setAlignment(Qt.AlignCenter)\nloading_label.setAlignment(Qt.AlignCenter)\nlabel2.setAlignment(Qt.AlignCenter)\nlabel3.setAlignment(Qt.AlignCenter)\n# add widgets\nlayout.addWidget(label)\nlayout.addWidget(loading_label)\nlayout.addWidget(label2)\nlayout.addWidget(label3)\nlayout.addWidget(label4)\nwindow.setLayout(layout)\nwindow.show()\n\n\nprocessIsDone = False\ncurrentNode = nuke.thisNode()\n\n\ndef selfDestruct22():\n    global processIsDone\n    print(run_cmd)\n    p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)\n    (output, err) = p.communicate()  \n    p_status = p.wait()\n    print(\"Command output: \" + output)\n    # Check if process is done \n    if \"it's done now\" in output:\n        processIsDone = True  \n        label.setText(\"Done !\")\n        label.setStyleSheet(\"color: green; font-weight: bold;\")\n        time.sleep( 1.5 )\n        window.close()\n        nuke.executeInMainThread( selfDestruct33, args=() )\n\n\ndef selfDestruct():\n    while not processIsDone :\n        label.setText(\"Processing\")\n        time.sleep( 0.8 )\n        cpu_usage = psutil.cpu_percent()\n        label2.setText(\"CPU : \"+str(cpu_usage)+\"%\")\n        memory_usage = psutil.virtual_memory()\n        label3.setText(\"RAM : \"+str(memory_usage.percent)+\"%\")\n\n\ndef selfDestruct33():\n    # reload result read node in case it has already cached older version\n    resultReadNode = currentNode.node('Read_result')\n    result_path = current_data_path+\"/Result/result_#####.png\"\n    update_read_node(resultReadNode,result_path)\n    # set output to result\n    currentNode\[\"output_image\"].setValue(\"Result\")\n    \n    # Disable Preview Clean matte\n    currentNode\[\"preview_clean_matte\"].setValue(False)\n    \n    # update last run text\n    from datetime import datetime\n    now = datetime.now()\n    formatted_date_time = now.strftime(\"%Y/%m/%d %H:%M\")\n    currentNode\[\"text_last_run\"].setValue(formatted_date_time)\n    print(\"before size\")\n    #currentNode\[\"text_s_size\"].setValue(str(get_directory_size(current_data_path))+\" MB\")\n    print(\"Km AI Cleaner - one pass done\")\n    print(\"check for new round\")\n    Batch_Render = loaded_data\[\"Batch_Render\"]\n    print(Batch_Render)\n    next_frame_to_render = frame_to_render + 1\n    if next_frame_to_render > int(loaded_data\[\"end_frame\"]):\n        Batch_Render = False\n        print(\"made batch var False\")\n    print(Batch_Render)\n    with open(params_file, 'r') as f:\n        data = json.load(f)\n    data\[\"current_data_path\"] = current_data_path\n    data\[\"frame_number\"] = str(frame_to_render).zfill(5)\n    data\[\"end_frame\"] = loaded_data\[\"end_frame\"]\n    data\[\"Batch_Render\"] = Batch_Render\n    # Write data to JSON file\n    with open(os.environ.get('Km_AI_Plugin_Path')+\"/params.json\", \"w\") as file:\n        json.dump(data, file)\n    print(Batch_Render)\n    if Batch_Render :\n        print(\"executing run button\")\n        currentNode\['btn_run'].execute()\n\n\n\n#def check_for_another_round():\n\n\n\ndef get_directory_size(directory):\n    total_size = 0\n    for dirpath, dirnames, filenames in os.walk(directory):\n        for filename in filenames:\n            filepath = os.path.join(dirpath, filename)\n            total_size += os.path.getsize(filepath)\n    total_size_in_MB = total_size / (1024 * 1024.0)\n    return   '\{:.2f\}'.format(total_size_in_MB)\n\n\ndef update_read_node(readNode,fileName):\n    import re\n    import glob \n    import platform\n    readNode.knob('file').setValue(fileName)\n    cleanPath = nukescripts.replaceHashes(fileName) \n    padRE = re.compile('%0(\\d+)d') \n    padMatch = padRE.search(cleanPath)         \n    if padMatch: \n        padSize = int(padMatch.group(1)) \n        frameList = sorted(glob.iglob(padRE.sub('\[0-9]' * padSize, cleanPath))) \n        first = os.path.splitext(frameList\[0])\[0]\[-padSize:] \n        last = os.path.splitext(frameList\[-1])\[0]\[-padSize:] \n        if platform.system() == \"Windows\":\n            readNode\['file'].fromUserText('%s %s-%s' % (cleanPath, first, last))\n        else : # for linux\n            readNode\['file'].fromUserText(cleanPath)\n            readNode\['first'].setValue(int(nuke.root()\[\"first_frame\"].getValue())) # code above doesn't work properly for linux so we set first & last from project\n            readNode\['last'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))\n            readNode\['origfirst'].setValue(int(nuke.root()\[\"first_frame\"].getValue()))\n            readNode\['origlast'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))  \n    readNode.knob('reload').execute()\n\n\nthreading.Thread( None, selfDestruct22 ).start()\nthreading.Thread( None, selfDestruct ).start()\n\n\n\n\n" +STARTLINE}
+ addUserKnob {26 text_last_run l "Last Run : " -STARTLINE T "2023/10/29 16:35"}
+ addUserKnob {26 text l Notice: T "Result will be saved on the frame you run.\nIf you ran on frame 40 so viewer shoulld\nbe set to 40 or use a frame hold node. "}
+ addUserKnob {22 btn_open_dir l "Open Dir" T "import os\nimport platform\nimport subprocess\n\ndef OpenFileOrFolder(path):\n    operatingSystem = platform.system()\n    if os.path.exists(path):\n        if operatingSystem == \"Windows\":\n            os.startfile(path)\n        elif operatingSystem == \"Darwin\":\n            subprocess.Popen(\[\"open\", path])\n        else:\n            subprocess.Popen(\[\"xdg-open\", path])\n\npath = nuke.script_directory() + \"/\"+nuke.thisNode().name()+\"_Data/\"\nOpenFileOrFolder(path)" +STARTLINE}
+ addUserKnob {26 text_files_size l "Cached files:" -STARTLINE T "0.81 MB"}
+ addUserKnob {22 btn_batch_render l "Batch Render (Seq)" T "import json\n#frame_range = nuke.getFramesAndViews('get range', '1-5')\n#print(frame_range\[0])\n\n\nstart_frame = 40\nend_frame = 45\nstart_frame_srt = str(start_frame).zfill(5)\n# Data to be written to the JSON file\n\n\n\nparams_file = os.environ.get('Km_AI_Plugin_Path')+\"/params.json\"\nwith open(params_file, 'r') as f:\n  data = json.load(f)\ndata\[\"frame_number\"] = start_frame_srt\ndata\[\"end_frame\"] = str(end_frame).zfill(5)\ndata\[\"Batch_Render\"] = True\n\n\n# Write data to JSON file\nwith open(params_file, \"w\") as file:\n    json.dump(data, file)\n\n\n\n\n\n\n    \nnuke.thisNode()\['btn_run'].execute()" +STARTLINE}
+ addUserKnob {6 is_processing l "is_processing (for batch render)" +INVISIBLE +STARTLINE}
+ addUserKnob {20 tab l Rotopaint}
+ addUserKnob {20 "" n -4}
+ addUserKnob {41 curves l "" +STARTLINE T RotoPaint1.curves}
+ addUserKnob {20 "" n -5}
+ addUserKnob {26 text_3 l "Paint tool"}
+ addUserKnob {26 text_4 l "" +STARTLINE T "Set Clean matte to \"Rotopaint\" and paint areas you want to clean"}
+ addUserKnob {26 ""}
+ addUserKnob {41 toolbar_autokey l @Roto/AutoKey -STARTLINE T RotoPaint1.toolbar_autokey}
+ addUserKnob {41 toolbar_label_points l @Roto/LabelPoints -STARTLINE T RotoPaint1.toolbar_label_points}
+ addUserKnob {41 toolbar_hide_curve_lines_type l @Roto/HideCurve -STARTLINE T RotoPaint1.toolbar_hide_curve_lines_type}
+ addUserKnob {41 toolbar_hide_points_type l @Roto/HidePoints -STARTLINE T RotoPaint1.toolbar_hide_points_type}
+ addUserKnob {41 toolbar_hide_transform_type l @Roto/HideTransformHandles -STARTLINE T RotoPaint1.toolbar_hide_transform_type}
+ addUserKnob {41 toolbar_hide_transform_on_move_type l @Roto/HideTransformHandlesOnMove -STARTLINE T RotoPaint1.toolbar_hide_transform_on_move_type}
+ addUserKnob {41 toolbar_constant_selection l @Roto/ConstantSelection -STARTLINE T RotoPaint1.toolbar_constant_selection}
+ addUserKnob {41 toolbar_ripple l @Roto/RippleEdit -STARTLINE T RotoPaint1.toolbar_ripple}
+ addUserKnob {41 toolbar_show_clone_settings l @Roto/CloneToolbar -STARTLINE T RotoPaint1.toolbar_show_clone_settings}
+ addUserKnob {41 toolbar_feather_link l @Roto/FeatherLink -STARTLINE T RotoPaint1.toolbar_feather_link}
+ addUserKnob {41 toolbox l "" +STARTLINE T RotoPaint1.toolbox}
+ addUserKnob {26 "" l " "}
+ addUserKnob {41 key l "spline key" T RotoPaint1.key}
+ addUserKnob {20 status l Status}
+ addUserKnob {6 color_rgba_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 text_1 l "" +STARTLINE T "Installation status of requirement components :"}
+ addUserKnob {6 boolean_2 l Python +STARTLINE}
+ addUserKnob {6 boolean l "lama-cleaner Core" +STARTLINE}
+ addUserKnob {6 boolean_1 l PyTorch +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {26 text_7 l "" +STARTLINE T "Congrats, You're ready to go!\nIt's seems you missed PyToch. So you can use the tool by CPU, Not GPU\nYou need to Install components, check Help tab"}
+ addUserKnob {22 btn_Check l "Check and install" T "import sys\nimport subprocess\n\n\n\ndef read_file_to_set(filename):\n    \"\"\"Reads a file and saves it in a Python set (each line as an item).\n    \"\"\"\n    # Open the file in read mode.\n    with open(filename, 'r') as f:\n        # Read all the lines from the file.\n        lines = f.readlines()\n\n\n    # Create a new set.\n    set_of_lines = set()\n\n\n    # Iterate over the list of lines and add each line to the set.\n    for line in lines:\n        set_of_lines.add(line.rstrip())\n\n\n    # Close the file.\n    f.close()\n\n\n    # Return the set.\n    return set_of_lines\n\n\nrequirements_file_name = \"Z:/Km Files/KmWorks/KmTools/Km_AI_Cleaner/Github/Km_AI_Cleaner/Km_AI_Cleaner/requirements.txt\"\nset_of_lines = read_file_to_set(requirements_file_name)\n# Print the set.\nprint(set_of_lines)\n\n\n\n\n# required  = \{'numpy', 'pandas', 'flaskwebgui==0.3.5'\} \nrequired  = set_of_lines\nmissing   = required \n# implement pip as a subprocess:\nfor package in missing:\n  subprocess.check_call(\[sys.executable, '-m', 'pip', 'install', package])\n\n" +STARTLINE}
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {35 menu M {"Hello World" "display \{return \"Hello World From \[knob name]\"\}" ""}}
+ addUserKnob {68 cascading_pulldown M {t1 t2 t3 t4}}
+ addUserKnob {4 pulldown M {t1 t2 t3 t4}}
+ addUserKnob {22 python_button T "if not nuke.thisNode()\[\"is_processing\"].value() :\n    print(\"asdasd\")" +STARTLINE}
+ addUserKnob {19 color_rgba}
+ color_rgba {0 0 0 0}
+ addUserKnob {6 color_rgba_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {20 tab_1 l About}
+ addUserKnob {26 tt l "" +STARTLINE T "<font size='5'>Km AI Cleaner </font> v1.0<br>\n\n(Lama Cleaner For Nuke)"}
+ addUserKnob {26 ""}
+}
+ Input {
+  inputs 0
+  name InputMask
+  xpos -443
+  ypos -148
+  number 1
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  name Shuffle3
+  label "for fixing nox existing alpha channel"
+  xpos -443
+  ypos -77
+ }
+ Input {
+  inputs 0
+  name InputInput
+  xpos 0
+  ypos -143
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  name Shuffle2
+  label "for fixing nox existing alpha channel"
+  xpos 0
+  ypos -83
+ }
+ Dot {
+  name Dot3
+  xpos 34
+  ypos -11
+ }
+set N65b97800 [stack 0]
+ Dot {
+  name Dot4
+  xpos -230
+  ypos -11
+ }
+ RotoPaint {
+  curves {{{v x3f99999a}
+  {f 0}
+  {n
+   {layer Root
+    {f 2097664}
+    {t x44800000 x44428000}
+    {a pt1x 0 pt1y 0 pt2x 0 pt2y 0 pt3x 0 pt3y 0 pt4x 0 pt4y 0 ptex00 0 ptex01 0 ptex02 0 ptex03 0 ptex10 0 ptex11 0 ptex12 0 ptex13 0 ptex20 0 ptex21 0 ptex22 0 ptex23 0 ptex30 0 ptex31 0 ptex32 0 ptex33 0 ptof1x 0 ptof1y 0 ptof2x 0 ptof2y 0 ptof3x 0 ptof3y 0 ptof4x 0 ptof4y 0 pterr 0 ptrefset 0 ptmot x40800000 ptref 0}}}}}
+  toolbox {selectAll {
+  { selectAll bs 40.2 str 1 ssx 1 ssy 1 sf 1 }
+  { createBezier str 1 ssx 1 ssy 1 sf 1 sb 1 tt 4 }
+  { createBezierCusped str 1 ssx 1 ssy 1 sf 1 sb 1 tt 5 }
+  { createBSpline str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createEllipse str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangle str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createRectangleCusped str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { createOpenSpline str 1 ssx 1 ssy 1 sf 1 tt 10 }
+  { brush bs 40.2 str 1 ssx 1 ssy 1 sf 1 sb 1 ltn 15 ltm 15 tt 17 }
+  { eraser bs 20.5 src 2 str 1 ssx 1 ssy 1 sf 1 sb 1 tt 18 }
+  { clone bs 95 dt 0 src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 tt 19 }
+  { reveal src 3 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { dodge src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { burn src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { blur src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 tt 23 }
+  { sharpen src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+  { smear src 1 str 1 ssx 1 ssy 1 sf 1 sb 1 }
+} }
+  toolbar_brush_size 40.20000076
+  toolbar_brush_hardness 0.200000003
+  toolbar_lifetime_type single
+  toolbar_lifetime_start 40
+  toolbar_lifetime_end 40
+  toolbar_source_transform_scale {1 1}
+  toolbar_source_transform_center {1024 778}
+  colorOverlay {0 0 0 0}
+  lifetime_start 15
+  lifetime_end 15
+  view {}
+  motionblur_on true
+  motionblur_shutter_offset_type centred
+  brush_size 40.20000076
+  brush_spacing 0.05000000075
+  brush_hardness 0.200000003
+  source_black_outside true
+  name RotoPaint1
+  xpos -264
+  ypos 126
+ }
+ Switch {
+  inputs 2
+  which 1
+  name Switch_clean_matte
+  xpos -443
+  ypos 126
+ }
+ Dot {
+  name Dot2
+  xpos -409
+  ypos 241
+ }
+set N65b96800 [stack 0]
+ Dot {
+  name Dot6
+  xpos -409
+  ypos 340
+ }
+set N65b96400 [stack 0]
+push $N65b96800
+ Read {
+  inputs 0
+  file_type png
+  file "Z:/Km Files/KmWorks/KmTools/Km_AI_Cleaner/Github/Km_AI_Cleaner/Km_AI_Cleaner/Sample/Km_AI_Cleaner2_Data/Result/result_%05d.png"
+  format "512 512 0 0 512 512 1 square_512"
+  first 15
+  last 40
+  origfirst 15
+  origlast 40
+  origset true
+  version 113
+  in_colorspace scene_linear
+  out_colorspace scene_linear
+  name Read_result
+  selected true
+  xpos 159
+  ypos 58
+ }
+set N65b96000 [stack 0]
+ NoOp {
+  name Result
+  xpos 159
+  ypos 176
+ }
+push $N65b97800
+ Switch {
+  inputs 2
+  name Switch_output
+  xpos 0
+  ypos 176
+ }
+ Grade {
+  inputs 1+1
+  white {3 0.2 0.2 0.2}
+  multiply {1 1 1 1}
+  name Grade1
+  xpos 0
+  ypos 238
+ }
+ Dot {
+  name Dot1
+  xpos 34
+  ypos 294
+ }
+set N65b94c00 [stack 0]
+ Dot {
+  name Dot5
+  xpos -101
+  ypos 294
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos -135
+  ypos 333
+ }
+push $N65b94c00
+ Switch {
+  inputs 2
+  name Switch_alpha
+  xpos 0
+  ypos 339
+ }
+ Output {
+  name Output1
+  xpos 0
+  ypos 412
+ }
+push $N65b96400
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.alpha 0 3 rgba.red 0 0 rgba.alpha 0 3 rgba.green 0 1 rgba.alpha 0 3 rgba.blue 0 2 rgba.alpha 0 3 rgba.alpha 0 3"
+  name Shuffle1
+  xpos -443
+  ypos 418
+ }
+ Write {
+  file "\[python \{nuke.script_directory() + \"/\"+nuke.thisGroup().name()+\"_Data\"\}]/Temp/Input_mask_#####.png"
+  file_type png
+  datatype "16 bit"
+  create_directories true
+  checkHashOnRead false
+  version 141
+  in_colorspace scene_linear
+  out_colorspace scene_linear
+  name Write_i_mask
+  xpos -443
+  ypos 486
+ }
+push $N65b96000
+push $N65b97800
+ Switch {
+  inputs 2
+  name Switch_iteration
+  xpos 159
+  ypos -14
+ }
+ Write {
+  file "\[python \{nuke.script_directory() + \"/\"+nuke.thisGroup().name()+\"_Data\"\}]/Temp/Input_image_#####.png"
+  file_type png
+  create_directories true
+  checkHashOnRead false
+  version 150
+  in_colorspace scene_linear
+  out_colorspace scene_linear
+  name Write_i_image
+  xpos 365
+  ypos -20
+ }
+end_group
+Read {
+ inputs 0
+ file_type png
+ file C:/Users/kmdesk/.nuke/Km_RobustVideoMatting/KM_RVM_Data/alpha/%04d.png
+ format "360 640 0 0 360 640 1 "
+ first 0
+ last 20
+ frame_mode "start at"
+ frame 20
+ origfirst 0
+ origlast 20
+ origset true
+ name Read2
+ xpos -1133
+ ypos -397
+}
+Read {
+ inputs 0
+ file_type png
+ file Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/KM_RVM_Data/alpha/%04d.png
+ format "360 640 0 0 360 640 1 "
+ first 0
+ last 20
+ frame_mode "start at"
+ frame 20
+ origfirst 0
+ origlast 20
+ origset true
+ name Read3
+ xpos -1040
+ ypos -406
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+ name Shuffle1
+ xpos -1086
+ ypos -205
+}
+set N65b45400 [stack 0]
+Read {
+ inputs 0
+ file_type mov
+ file C:/Users/kmdesk/.nuke/Km_RobustVideoMatting/Sample/Sample_Input/person.mp4
+ format "360 640 0 0 360 640 1 "
+ last 388
+ origlast 388
+ origset true
+ auto_alpha true
+ name Read1
+ xpos -717
+ ypos -377
+}
+set N65b45000 [stack 0]
+Dot {
+ name Dot1
+ xpos -820
+ ypos -344
+}
+set N65b44800 [stack 0]
+Grade {
+ inputs 1+1
+ white {2.51 0 0 1}
+ white_panelDropped true
+ name Grade2
+ xpos -949
+ ypos -115
+}
+Read {
+ inputs 0
+ file_type mov
+ file Z:/Downloads/Footage/dance2.mp4
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ last 608
+ origlast 608
+ origset true
+ name Read4
+ xpos -948
+ ypos -532
+}
+push $N65b45000
+Group {
+ name KM_RVM
+ tile_color 0xcd9bffff
+ label "Robust Video\nMatting v1.0\n"
+ xpos -717
+ ypos -243
+ addUserKnob {20 User l "Km Robust Video Matting"}
+ addUserKnob {26 title l " " T "<font size='5'><b>   Km Robust Video Matting </b></font> <br>\n"}
+ addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
+ addUserKnob {26 text_run l <b>Run</b>}
+ addUserKnob {6 checkbox_gpu l GPU +STARTLINE}
+ checkbox_gpu true
+ addUserKnob {22 btn_run l Run T "\n\nimport ctypes\nimport glob\nimport json\nimport os\nimport platform\nimport re\nimport shutil\nimport socket\nimport subprocess\nimport threading\nimport time\n\n\nPlugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\ncurrent_data_path = nuke.script_directory() + \"/\"+nuke.thisNode().name()+\"_Data\" \nprecomp_temp_dir = current_data_path+\"/Temp/\"\nalpha_output_path = current_data_path + \"/alpha/\" \n\n\n\n# Get current node\ncurrent_node = nuke.thisNode()\nframe_range = \"\"\nstart_frame_number = 0\n\n\nsocket_data = \"0\"\nprocessIsDone = False\nDevice_GPU = False\n\n\n# check if GPU\nif(nuke.thisNode()\[\"checkbox_gpu\"].value()):\n    Device_GPU = True\n\n\n\n\n\ndef run_rvm_core() : \n    global processIsDone\n    run_cmd = Plugin_Path+  \"/RVM_Core/Run.cmd\"\n    print(run_cmd)\n    # p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)\n    # (output, err) = p.communicate()  \n    # p_status = p.wait()\n    #print(\"Command output: \" + output)\n\n\n    # Check if process is done \n    # if \"Process is done\" in output:\n    #     processIsDone = True  \n    commands = u'/k ' + r\"\{\}\".format(run_cmd)\n    ctypes.windll.shell32.ShellExecuteW(\n            None,\n            u\"\", #\"runas\"\n            u\"cmd.exe\",\n            commands,\n            None,\n            1\n        )\n\n\ndef rvm_status_update():\n    print(\"start status update thread\")\n    global processIsDone\n    while not processIsDone :\n        #processIsDone = data\[\"process_is_done\"]\n        time.sleep( 1 )\n        # print(\"progressed frames : \"+ socket_data)\n        with open(json_file, 'r') as f:\n            data = json.load(f)\n        processIsDone = data\[\"process_is_done\"]\n    print(\"loop ended\")\n    nuke.executeInMainThread( CreateReadNode, args=() )\n\n\n# def rvm_socket_listener():\n#     global socket_data\n#     # TCP socket to get progress value from KM_inference.py\n#     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n#     sock.bind(('localhost', 5000))\n#     sock.listen(1)\n#     connection, address = sock.accept()\n#     # Receive progress updates from the client\n#     while True:\n#         data = connection.recv(1024).decode('utf-8')\n#         if not data:\n#             break\n#         socket_data = data\n#         #print(f\"Progress: \{progress\} out of 100\")\n#     # Close the connection\n#     connection.close()\n\n\n# Check if the current node has an input\nif current_node.inputs():\n\n\n    # Get the frame range of project\n    frame_first = str(int(nuke.root()\[\"first_frame\"].getValue()))\n    frame_last = str(int(nuke.root()\[\"last_frame\"].getValue()))\n    frame_range = frame_first + \"-\"+frame_last\n\n\n    # Get frame range from user\n    frames_input = nuke.getFramesAndViews('get range',frame_range)\n    frame_first = int(frames_input\[0].split('-')\[0])\n    frame_last = int(frames_input\[0].split('-')\[1])\n    start_frame_number = frame_first\n\n\n    # add data path to json file \n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"current_data_path\"] = current_data_path\n    data\[\"process_is_done\"] = False\n    data\[\"device_GPU\"] = Device_GPU\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n\n\n\n    # remove old files\n    if os.path.exists(precomp_temp_dir):\n        shutil.rmtree(precomp_temp_dir)\n    if os.path.exists(current_data_path + \"/alpha/\"):\n        shutil.rmtree(current_data_path + \"/alpha/\")\n    if os.path.exists(current_data_path + \"/com/\"):\n        shutil.rmtree(current_data_path + \"/com/\")\n    if os.path.exists(current_data_path + \"/fgr/\"):\n        shutil.rmtree(current_data_path + \"/fgr/\")\n    nuke.execute(nuke.toNode('RVM_Write_Image'), start=frame_first, end=frame_last)\n\n\n    threading.Thread( None, run_rvm_core).start()\n    #threading.Thread( None, rvm_socket_listener).start()\n    threading.Thread( None, rvm_status_update).start()\n\n\n\nelse:\n    # The current node has no inputs\n    nuke.message(\"Current node has no input!\")\n\n\n\n\n# def rename_png_sequence():\n#     \"\"\"RVM png seq starts with 0, so we rename them to match with input frame numbers\"\"\"\n#     global start_frame_number\n#     # Specify the directory containing the PNG images\n#     directory = alpha_output_path\n#     print(\"rename : \"+alpha_output_path)\n\n\n#     # Get the list of PNG images in the directory\n#     images = \[f for f in os.listdir(directory) if f.endswith('.png')]\n\n\n#     # Sort the images by their names\n#     images.sort(key=lambda s: int(s.split('.')\[0]))\n\n\n#     # Rename the images\n#     for i, image in enumerate(images):\n#         new_name = '%04d.png' % (start_frame_number + i)\n#         os.rename(os.path.join(directory, image), os.path.join(directory, new_name))\n\n\n\ndef CreateReadNode():\n    print(\"CreateReadNode start\")\n    fileName = alpha_output_path + \"####.png\"\n    isSequence = True\n    readNode = nuke.createNode(\"Read\",inpanel=False)\n    if isSequence : # using v!ctor tools code(by Victor Perez ) for creating read node for sequence . https://www.nukepedia.com/gizmos/image/vctor-tools\n        readNode.knob('file').setValue(fileName)\n        cleanPath = nukescripts.replaceHashes(fileName) \n        padRE = re.compile('%0(\\d+)d') \n        padMatch = padRE.search(cleanPath)         \n        if padMatch: \n            padSize = int(padMatch.group(1)) \n            frameList = sorted(glob.iglob(padRE.sub('\[0-9]' * padSize, cleanPath))) \n            first = os.path.splitext(frameList\[0])\[0]\[-padSize:] \n            last = os.path.splitext(frameList\[-1])\[0]\[-padSize:] \n            if platform.system() == \"Windows\":\n                readNode\['file'].fromUserText('%s %s-%s' % (cleanPath, first, last))\n            else : # for linux\n                readNode\['file'].fromUserText(cleanPath)\n                readNode\['first'].setValue(int(nuke.root()\[\"first_frame\"].getValue())) # code above doesn't work properly for linux so we set first & last from project\n                readNode\['last'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))\n                readNode\['origfirst'].setValue(int(nuke.root()\[\"first_frame\"].getValue()))\n                readNode\['origlast'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))\n\n\n    readNode.knob('frame').setValue(str(start_frame_number))\n    readNode.knob('frame_mode').setValue(\"start at\")\n    # set position\n    ref_node = nuke.thisNode() # current node as position reference\n    readNode.setXpos(ref_node.xpos())\n    readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)\n    print(\"CreateReadNode end\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)\n#(output, err) = p.communicate()  \n#os.chmod(python_path, 0o777)\n#mask = oct(os.stat(python_path).st_mode)\[-3:] \n#print(mask)\n#os.system(\"start /B start cmd.exe @cmd /k \" + run_cmd)\n#os.startfile(run_file, 'open')" +STARTLINE}
+ addUserKnob {26 text_void_space l " " T " "}
+ addUserKnob {26 text_output l <b>Output</b>}
+ addUserKnob {22 btn_open_dir l "Open Dir" T "import os\nimport platform\nimport subprocess\n\ndef OpenFileOrFolder(path):\n    operatingSystem = platform.system()\n    if os.path.exists(path):\n        if operatingSystem == \"Windows\":\n            os.startfile(path)\n        elif operatingSystem == \"Darwin\":\n            subprocess.Popen(\[\"open\", path])\n        else:\n            subprocess.Popen(\[\"xdg-open\", path])\n\npath = nuke.script_directory() + \"/\"+nuke.thisNode().name()+\"_Data/alpha/\"\nOpenFileOrFolder(path)" +STARTLINE}
+ addUserKnob {6 is_processing l "is_processing (for batch render)" +INVISIBLE +STARTLINE}
+ addUserKnob {20 status l Status}
+ addUserKnob {6 color_rgba_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 text_1 l "" +STARTLINE T "Status of dependencies :"}
+ addUserKnob {6 boolean_2 l Python +STARTLINE}
+ addUserKnob {6 boolean_1 l PyTorch +STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {26 text_7 l "" +STARTLINE T "Congrats, You're ready to go!\nIt's seems you missed PyToch. So you can use the tool by CPU, Not GPU\nYou need to Install components, check Help tab"}
+ addUserKnob {22 btn_Check l "Check and install" T "import sys\nimport subprocess\n\n\n\ndef read_file_to_set(filename):\n    \"\"\"Reads a file and saves it in a Python set (each line as an item).\n    \"\"\"\n    # Open the file in read mode.\n    with open(filename, 'r') as f:\n        # Read all the lines from the file.\n        lines = f.readlines()\n\n\n    # Create a new set.\n    set_of_lines = set()\n\n\n    # Iterate over the list of lines and add each line to the set.\n    for line in lines:\n        set_of_lines.add(line.rstrip())\n\n\n    # Close the file.\n    f.close()\n\n\n    # Return the set.\n    return set_of_lines\n\n\nrequirements_file_name = \"Z:/Km Files/KmWorks/KmTools/Km_AI_Cleaner/Github/Km_AI_Cleaner/Km_AI_Cleaner/requirements.txt\"\nset_of_lines = read_file_to_set(requirements_file_name)\n# Print the set.\nprint(set_of_lines)\n\n\n\n\n# required  = \{'numpy', 'pandas', 'flaskwebgui==0.3.5'\} \nrequired  = set_of_lines\nmissing   = required \n# implement pip as a subprocess:\nfor package in missing:\n  subprocess.check_call(\[sys.executable, '-m', 'pip', 'install', package])\n\n" +STARTLINE}
+ addUserKnob {20 help_1 l Help}
+ addUserKnob {35 menu M {"Hello World" "display \{return \"Hello World From \[knob name]\"\}" ""}}
+ addUserKnob {68 cascading_pulldown M {t1 t2 t3 t4}}
+ addUserKnob {4 pulldown M {t1 t2 t3 t4}}
+ addUserKnob {22 python_button T "if not nuke.thisNode()\[\"is_processing\"].value() :\n    print(\"asdasd\")" +STARTLINE}
+ addUserKnob {19 color_rgba}
+ color_rgba {0 0 0 0}
+ addUserKnob {6 color_rgba_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
+ addUserKnob {26 text_max_frames l "Max Frames :" T 9999}
+ addUserKnob {20 tab_1 l About}
+ addUserKnob {26 credit l "" +STARTLINE T "<font size='5'><b>Km Robust Video Matting </b></font> <br><br><br>\n\n\n\n<a style=\"color:white\" href=\"http://www.hkaramian.com\"><b >www.hkaramian.com</b></a>"}
+ addUserKnob {26 ""}
+}
+ Read {
+  inputs 0
+  file_type png
+  file "Z:/Km Files/KmWorks/KmTools/Km_AI_Cleaner/Github/Km_AI_Cleaner/Km_AI_Cleaner/Sample/Km_AI_Cleaner2_Data/Result/result_%05d.png"
+  format "512 512 0 0 512 512 1 square_512"
+  first 15
+  last 40
+  origfirst 15
+  origlast 40
+  origset true
+  version 113
+  in_colorspace scene_linear
+  out_colorspace scene_linear
+  name Read_result
+  xpos 159
+  ypos 50
+ }
+set N63413400 [stack 0]
+ NoOp {
+  name Result
+  xpos 159
+  ypos 176
+ }
+ Input {
+  inputs 0
+  name InputInput
+  xpos 0
+  ypos -143
+ }
+ Dot {
+  name Dot3
+  xpos 34
+  ypos -11
+ }
+set N63412400 [stack 0]
+ Switch {
+  inputs 2
+  name Switch_output
+  xpos 0
+  ypos 176
+ }
+ Output {
+  name Output1
+  xpos 0
+  ypos 332
+ }
+push $N63413400
+push $N63412400
+ Switch {
+  inputs 2
+  name Switch_iteration
+  xpos 159
+  ypos -14
+ }
+push $N63412400
+ Write {
+  file "\[python \{nuke.script_directory() + \"/\"+nuke.thisGroup().name()+\"_Data\"\}]/Temp/Input_image_#####.png"
+  file_type png
+  datatype "16 bit"
+  create_directories true
+  checkHashOnRead false
+  version 199
+  name RVM_Write_Image
+  selected true
+  xpos -187
+  ypos -20
+ }
+end_group
+push $N65b45400
+push $N65b44800
+Merge2 {
+ inputs 2
+ operation mask
+ name Merge1
+ xpos -951
+ ypos -205
+}
+Constant {
+ inputs 0
+ channels rgb
+ color {0.006999993231 0.349999994 0 1}
+ format "360 640 0 0 360 640 1 "
+ name Constant1
+ xpos -1189
+ ypos -152
+}
+Merge2 {
+ inputs 2
+ name Merge2
+ xpos -1083
+ ypos -49
+}
+push 0
+Viewer {
+ inputs 3
+ frame 40
+ frame_range 20-40
+ frame_range_lock true
+ input_number 1
+ name Viewer1
+ xpos -850
+ ypos 60
+}
