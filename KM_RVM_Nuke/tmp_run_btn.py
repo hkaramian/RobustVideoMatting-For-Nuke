@@ -16,7 +16,7 @@ json_file = Plugin_Path +"/params.json"
 current_data_path = nuke.script_directory() + "/"+nuke.thisNode().name()+"_Data" 
 precomp_temp_dir = current_data_path+"/Temp/"
 alpha_output_path = current_data_path + "/alpha/" 
-
+ref_node = nuke.thisNode() # current node as position reference
 
 # Get current node
 current_node = nuke.thisNode()
@@ -152,6 +152,7 @@ else:
 
 
 def CreateReadNode():
+    global ref_node
     print("CreateReadNode start")
     fileName = alpha_output_path + "####.png"
     isSequence = True
@@ -177,10 +178,20 @@ def CreateReadNode():
 
     readNode.knob('frame').setValue(str(start_frame_number))
     readNode.knob('frame_mode').setValue("start at")
+    print("start set pos")
     # set position
-    ref_node = nuke.thisNode() # current node as position reference
+    print("read node name :" + readNode.name())
+    print("ref node name :" + ref_node.name())
     readNode.setXpos(ref_node.xpos())
     readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)
+    print("start create shuffle")
+    # Create the Shuffle node
+    shuffle2_node = nuke.createNode('Shuffle2',inpanel=False)
+    layers_in =  ['rgba.red', 'rgba.red', 'rgba.red', 'rgba.red']
+    layers_out = ['rgba.red', 'rgba.green', 'rgba.blue', 'rgba.alpha']
+    mapping = zip([0, 0, 0, 0], layers_in, layers_out)
+    shuffle2_node['mappings'].setValue(mapping)
+    shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 20)
     print("CreateReadNode end")
 
 
