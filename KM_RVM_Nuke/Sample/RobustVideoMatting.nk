@@ -11,16 +11,16 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
             <split size="1167" stretch="1"/>
             <splitter orientation="2">
                 <split size="962"/>
-                <dock id="" activePageId="Viewer.1">
-                    <page id="Viewer.1"/>
+                <dock id="" activePageId="uk.co.thefoundry.scripteditor.1" focus="true">
                     <page id="uk.co.thefoundry.scripteditor.1"/>
                     <page id="com.adrianpueyo.KnobScripterPane"/>
+                    <page id="Viewer.1"/>
                 </dock>
             </splitter>
             <split size="702"/>
             <splitter orientation="2">
                 <split size="479"/>
-                <dock id="" activePageId="Properties.1" focus="true">
+                <dock id="" activePageId="Properties.1">
                     <page id="Properties.1"/>
                     <page id="uk.co.thefoundry.backgroundrenderview.1"/>
                 </dock>
@@ -152,7 +152,7 @@ Group {
   xpos 34
   ypos -11
  }
-set N6976800 [stack 0]
+set N63d07400 [stack 0]
  Dot {
   name Dot4
   xpos -230
@@ -218,14 +218,14 @@ set N6976800 [stack 0]
   xpos -409
   ypos 241
  }
-set N6975800 [stack 0]
+set N63d06400 [stack 0]
  Dot {
   name Dot6
   xpos -409
   ypos 340
  }
-set N6975400 [stack 0]
-push $N6975800
+set N63d06000 [stack 0]
+push $N63d06400
  Read {
   inputs 0
   file_type png
@@ -244,13 +244,13 @@ push $N6975800
   xpos 159
   ypos 58
  }
-set N6975000 [stack 0]
+set N63d05c00 [stack 0]
  NoOp {
   name Result
   xpos 159
   ypos 176
  }
-push $N6976800
+push $N63d07400
  Switch {
   inputs 2
   name Switch_output
@@ -270,7 +270,7 @@ push $N6976800
   xpos 34
   ypos 294
  }
-set N6907800 [stack 0]
+set N63d04800 [stack 0]
  Dot {
   name Dot5
   xpos -101
@@ -284,7 +284,7 @@ set N6907800 [stack 0]
   xpos -135
   ypos 333
  }
-push $N6907800
+push $N63d04800
  Switch {
   inputs 2
   name Switch_alpha
@@ -296,7 +296,7 @@ push $N6907800
   xpos 0
   ypos 412
  }
-push $N6975400
+push $N63d06000
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -318,8 +318,8 @@ push $N6975400
   xpos -443
   ypos 486
  }
-push $N6975000
-push $N6976800
+push $N63d05c00
+push $N63d07400
  Switch {
   inputs 2
   name Switch_iteration
@@ -381,7 +381,7 @@ Dot {
  xpos -1223
  ypos -212
 }
-set N1155c800 [stack 0]
+set N63c94400 [stack 0]
 Read {
  inputs 0
  file_type mov
@@ -392,16 +392,16 @@ Read {
  origset true
  auto_alpha true
  name Read1
- xpos -717
- ypos -377
+ xpos -792
+ ypos -366
 }
-set N68b7400 [stack 0]
+set N65b6bc00 [stack 0]
 Dot {
  name Dot1
- xpos -820
- ypos -344
+ xpos -895
+ ypos -333
 }
-set N68b6c00 [stack 0]
+set N65b6b400 [stack 0]
 Grade {
  inputs 1+1
  white {2.51 0 0 1}
@@ -410,8 +410,8 @@ Grade {
  xpos -1150
  ypos -125
 }
-push $N1155c800
-push $N68b6c00
+push $N63c94400
+push $N65b6b400
 Merge2 {
  inputs 2
  operation mask
@@ -437,24 +437,24 @@ Merge2 {
 push 0
 Viewer {
  inputs 2
- frame 30
  frame_range 20-40
  frame_range_lock true
- input_number 1
  name Viewer1
  xpos -869
  ypos 13
 }
-push $N68b7400
+push $N65b6bc00
 Group {
  name KM_RVM
  tile_color 0xcd9bffff
  label "Robust Video\nMatting v1.0\n"
  selected true
- xpos -717
- ypos -248
+ xpos -792
+ ypos -237
  addUserKnob {20 User l "Km Robust Video Matting"}
  addUserKnob {26 title l " " T "<font size='5'><b>   KM Robust Video Matting </b></font> <br>\n"}
+ addUserKnob {4 pulldown_input l Input M {"Node Input" "File Path" "" ""}}
+ addUserKnob {2 filename}
  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
  addUserKnob {26 text_run l <b>Run</b>}
  addUserKnob {6 checkbox_gpu l GPU +STARTLINE}
@@ -502,7 +502,7 @@ Group {
   xpos 159
   ypos 50
  }
-set N68b5c00 [stack 0]
+set N65b6a000 [stack 0]
  NoOp {
   name Result
   xpos 159
@@ -519,7 +519,7 @@ set N68b5c00 [stack 0]
   xpos 34
   ypos -11
  }
-set N68b4c00 [stack 0]
+set N65b69000 [stack 0]
  Switch {
   inputs 2
   name Switch_output
@@ -531,15 +531,15 @@ set N68b4c00 [stack 0]
   xpos 0
   ypos 332
  }
-push $N68b5c00
-push $N68b4c00
+push $N65b6a000
+push $N65b69000
  Switch {
   inputs 2
   name Switch_iteration
   xpos 159
   ypos -14
  }
-push $N68b4c00
+push $N65b69000
  Write {
   file "\[python \{nuke.script_directory() + \"/\"+nuke.thisGroup().name()+\"_Data\"\}]/Temp/Input_image_#####.png"
   file_type png
@@ -547,6 +547,8 @@ push $N68b4c00
   create_directories true
   checkHashOnRead false
   version 205
+  in_colorspace scene_linear
+  out_colorspace scene_linear
   name RVM_Write_Image
   selected true
   xpos -187
