@@ -17,6 +17,7 @@ current_data_path = nuke.script_directory() + "/"+nuke.thisNode().name()+"_Data"
 precomp_temp_dir = current_data_path+"/Temp/"
 alpha_output_path = current_data_path + "/alpha/" 
 ref_node = nuke.thisNode() # current node as position reference
+input_path = precomp_temp_dir
 
 # Get current node
 current_node = nuke.thisNode()
@@ -26,12 +27,16 @@ start_frame_number = 0
 socket_data = "0"
 processIsDone = False
 Device_GPU = False
+InputIsNodeInput = False # input : node input / selected file path
+readyToRun = False
 
 # check if GPU
 if(nuke.thisNode()["checkbox_gpu"].value()):
     Device_GPU = True
 
-
+# check  whether input is node input or selected file path
+if(nuke.thisNode()["pulldown_node_input"].value()=="Node Input"):
+    InputIsNodeInput = True
 
 
 def run_rvm_core() : 
@@ -86,49 +91,60 @@ def rvm_status_update():
 #     # Close the connection
 #     connection.close()
 
+
+
+# remove old files
+if os.path.exists(precomp_temp_dir):
+    shutil.rmtree(precomp_temp_dir)
+if os.path.exists(current_data_path + "/alpha/"):
+    shutil.rmtree(current_data_path + "/alpha/")
+if os.path.exists(current_data_path + "/com/"):
+    shutil.rmtree(current_data_path + "/com/")
+if os.path.exists(current_data_path + "/fgr/"):
+    shutil.rmtree(current_data_path + "/fgr/")
+
 # Check if the current node has an input
-if current_node.inputs():
+if InputIsNodeInput :
+    if current_node.inputs() :
+        # Get the frame range of project
+        frame_first = str(int(nuke.root()["first_frame"].getValue()))
+        frame_last = str(int(nuke.root()["last_frame"].getValue()))
+        frame_range = frame_first + "-"+frame_last
 
-    # Get the frame range of project
-    frame_first = str(int(nuke.root()["first_frame"].getValue()))
-    frame_last = str(int(nuke.root()["last_frame"].getValue()))
-    frame_range = frame_first + "-"+frame_last
+        # Get frame range from user
+        frames_input = nuke.getFramesAndViews('get range',frame_range)
+        frame_first = int(frames_input[0].split('-')[0])
+        frame_last = int(frames_input[0].split('-')[1])
+        start_frame_number = frame_first
+        # Render node input to temp dir
+        nuke.execute(nuke.toNode('RVM_Write_Image'), start=frame_first, end=frame_last)
+        readyToRun = True
+    else:
+        nuke.message("Node has no input !")
+else : # if input is selected file
+    if nuke.thisNode()["filename"].value() != "" :
+        input_path = nuke.thisNode()["filename"].value()
+        if input_path[-4:]!= ".mp4" :
+            input_path = os.path.dirname(input_path) + "/"
+        readyToRun = True
+    else:
+        nuke.message("filename is empy")
 
-    # Get frame range from user
-    frames_input = nuke.getFramesAndViews('get range',frame_range)
-    frame_first = int(frames_input[0].split('-')[0])
-    frame_last = int(frames_input[0].split('-')[1])
-    start_frame_number = frame_first
-
+if readyToRun :
     # add data path to json file 
     with open(json_file, 'r') as f:
         data = json.load(f)
     data["current_data_path"] = current_data_path
+    data["input_path"] = input_path
     data["process_is_done"] = False
     data["device_GPU"] = Device_GPU
     with open(json_file, "w") as file:
         json.dump(data, file)
 
-
-    # remove old files
-    if os.path.exists(precomp_temp_dir):
-        shutil.rmtree(precomp_temp_dir)
-    if os.path.exists(current_data_path + "/alpha/"):
-        shutil.rmtree(current_data_path + "/alpha/")
-    if os.path.exists(current_data_path + "/com/"):
-        shutil.rmtree(current_data_path + "/com/")
-    if os.path.exists(current_data_path + "/fgr/"):
-        shutil.rmtree(current_data_path + "/fgr/")
-    nuke.execute(nuke.toNode('RVM_Write_Image'), start=frame_first, end=frame_last)
-
     threading.Thread( None, run_rvm_core).start()
     #threading.Thread( None, rvm_socket_listener).start()
     threading.Thread( None, rvm_status_update).start()
 
-
-else:
-    # The current node has no inputs
-    nuke.message("Current node has no input!")
 
 
 
@@ -175,9 +191,9 @@ def CreateReadNode():
                 readNode['last'].setValue(int(nuke.root()["last_frame"].getValue()))
                 readNode['origfirst'].setValue(int(nuke.root()["first_frame"].getValue()))
                 readNode['origlast'].setValue(int(nuke.root()["last_frame"].getValue()))
-
-    readNode.knob('frame').setValue(str(start_frame_number))
-    readNode.knob('frame_mode').setValue("start at")
+    if InputIsNodeInput:
+        readNode.knob('frame').setValue(str(start_frame_number))
+        readNode.knob('frame_mode').setValue("start at")
     print("start set pos")
     # set position
     print("read node name :" + readNode.name())
@@ -193,22 +209,6 @@ def CreateReadNode():
     shuffle2_node['mappings'].setValue(mapping)
     shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 20)
     print("CreateReadNode end")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)
 #(output, err) = p.communicate()  

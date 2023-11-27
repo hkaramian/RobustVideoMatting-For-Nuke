@@ -2,29 +2,29 @@
 version 12.2 v4
 define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 <layout version="1.0">
-    <window x="0" y="0" w="1917" h="1000" screen="0">
+    <window x="-1" y="-8" w="1920" h="1009" maximized="1" screen="0">
         <splitter orientation="1">
             <split size="40"/>
             <dock id="" hideTitles="1" activePageId="Toolbar.1">
                 <page id="Toolbar.1"/>
             </dock>
-            <split size="1167" stretch="1"/>
+            <split size="1238" stretch="1"/>
             <splitter orientation="2">
-                <split size="962"/>
-                <dock id="" activePageId="Viewer.1">
-                    <page id="Viewer.1"/>
+                <split size="971"/>
+                <dock id="" activePageId="uk.co.thefoundry.scripteditor.1">
                     <page id="uk.co.thefoundry.scripteditor.1"/>
                     <page id="com.adrianpueyo.KnobScripterPane"/>
+                    <page id="Viewer.1"/>
                 </dock>
             </splitter>
-            <split size="702"/>
+            <split size="634"/>
             <splitter orientation="2">
-                <split size="479"/>
+                <split size="484"/>
                 <dock id="" activePageId="Properties.1" focus="true">
                     <page id="Properties.1"/>
                     <page id="uk.co.thefoundry.backgroundrenderview.1"/>
                 </dock>
-                <split size="479"/>
+                <split size="483"/>
                 <dock id="" activePageId="DAG.1">
                     <page id="DAG.1"/>
                 </dock>
@@ -36,7 +36,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 Root {
  inputs 0
  name Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/RobustVideoMatting.nk
- frame 30
+ frame 16
  first_frame 20
  last_frame 40
  lock_range true
@@ -51,12 +51,107 @@ Root {
  logLut Cineon
  floatLut linear
 }
+Read {
+ inputs 0
+ file_type mov
+ file Z:/Downloads/Footage/dance2.mp4
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ last 608
+ origlast 608
+ origset true
+ name Read4
+ xpos -948
+ ypos -532
+}
+Read {
+ inputs 0
+ file_type png
+ file Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/KM_RVM_Data/alpha/%04d.png
+ format "360 640 0 0 360 640 1 "
+ first 0
+ last 20
+ frame_mode "start at"
+ frame 20
+ origfirst 0
+ origlast 20
+ origset true
+ version 2
+ name Read2
+ xpos -1257
+ ypos -394
+}
+Shuffle2 {
+ fromInput1 {{0} B}
+ fromInput2 {{0} B}
+ mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
+ name Shuffle1
+ xpos -1257
+ ypos -310
+}
+Dot {
+ name Dot2
+ xpos -1223
+ ypos -212
+}
+set N837a3000 [stack 0]
+Read {
+ inputs 0
+ file_type mov
+ file C:/Users/kmdesk/.nuke/Km_RobustVideoMatting/Sample/Sample_Input/person.mp4
+ format "360 640 0 0 360 640 1 "
+ last 388
+ origlast 388
+ origset true
+ auto_alpha true
+ name Read1
+ xpos -792
+ ypos -366
+}
+set N837a2c00 [stack 0]
+Dot {
+ name Dot1
+ xpos -895
+ ypos -333
+}
+set N837a2400 [stack 0]
+Grade {
+ inputs 1+1
+ white {2.51 0 0 1}
+ white_panelDropped true
+ name Grade2
+ xpos -1150
+ ypos -125
+}
+push $N837a3000
+push $N837a2400
+Merge2 {
+ inputs 2
+ operation mask
+ name Merge1
+ xpos -1152
+ ypos -215
+}
+Constant {
+ inputs 0
+ channels rgb
+ color {0.006999993231 0.349999994 0 1}
+ format "360 640 0 0 360 640 1 "
+ name Constant1
+ xpos -1437
+ ypos -204
+}
+Merge2 {
+ inputs 2
+ name Merge2
+ xpos -1246
+ ypos -95
+}
 Group {
  inputs 0
  name Km_AI_Cleaner2
  knobChanged "if(nuke.thisNode()\[\"preview_clean_matte\"].value()):\n    nuke.thisNode().node('Grade1')\[\"mix\"].setValue(1)\nelse:\n    nuke.thisNode().node('Grade1')\[\"mix\"].setValue(0)\n\nif(nuke.thisNode()\[\"output_image\"].value()==\"Source Input\"):\n    nuke.thisNode().node('Switch_output')\[\"which\"].setValue(0)\nelse:\n    nuke.thisNode().node('Switch_output')\[\"which\"].setValue(1)\n\nif(nuke.thisNode()\[\"output_alpha\"].value()==\"Source Input Alpha\"):\n    nuke.thisNode().node('Switch_alpha')\[\"which\"].setValue(0)\nelse:\n    nuke.thisNode().node('Switch_alpha')\[\"which\"].setValue(1)\n    \n\nif(nuke.thisNode()\[\"matte\"].value()==\"Rotopaint\"):\n    nuke.thisNode().node('Switch_clean_matte')\[\"which\"].setValue(0)\nelif(nuke.thisNode()\[\"matte\"].value()==\"Mask input\"):\n    nuke.thisNode().node('Switch_clean_matte')\[\"which\"].setValue(1)\n    \nif(nuke.thisNode()\[\"iteration\"].value()):\n    nuke.thisNode().node('Switch_iteration')\[\"which\"].setValue(1)\nelse:\n    nuke.thisNode().node('Switch_iteration')\[\"which\"].setValue(0)"
- xpos -482
- ypos -151
+ xpos -590
+ ypos -435
  addUserKnob {20 User l "Km AI Cleaner"}
  addUserKnob {4 output_image l "Output Image" M {"Source Input" Result "" "" "" "" "" "" "" ""}}
  addUserKnob {4 output_alpha l "Output Alpha" M {"Source Input Alpha" "Clean Matte Alpha" "" "" "" ""}}
@@ -152,7 +247,7 @@ Group {
   xpos 34
   ypos -11
  }
-set N6976800 [stack 0]
+set N83aa7c00 [stack 0]
  Dot {
   name Dot4
   xpos -230
@@ -218,14 +313,14 @@ set N6976800 [stack 0]
   xpos -409
   ypos 241
  }
-set N6975800 [stack 0]
+set N83aa6c00 [stack 0]
  Dot {
   name Dot6
   xpos -409
   ypos 340
  }
-set N6975400 [stack 0]
-push $N6975800
+set N83aa6800 [stack 0]
+push $N83aa6c00
  Read {
   inputs 0
   file_type png
@@ -244,13 +339,13 @@ push $N6975800
   xpos 159
   ypos 58
  }
-set N6975000 [stack 0]
+set N83aa6400 [stack 0]
  NoOp {
   name Result
   xpos 159
   ypos 176
  }
-push $N6976800
+push $N83aa7c00
  Switch {
   inputs 2
   name Switch_output
@@ -270,7 +365,7 @@ push $N6976800
   xpos 34
   ypos 294
  }
-set N6907800 [stack 0]
+set N83aa5000 [stack 0]
  Dot {
   name Dot5
   xpos -101
@@ -284,7 +379,7 @@ set N6907800 [stack 0]
   xpos -135
   ypos 333
  }
-push $N6907800
+push $N83aa5000
  Switch {
   inputs 2
   name Switch_alpha
@@ -296,7 +391,7 @@ push $N6907800
   xpos 0
   ypos 412
  }
-push $N6975400
+push $N83aa6800
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -318,8 +413,8 @@ push $N6975400
   xpos -443
   ypos 486
  }
-push $N6975000
-push $N6976800
+push $N83aa6400
+push $N83aa7c00
  Switch {
   inputs 2
   name Switch_iteration
@@ -341,125 +436,58 @@ push $N6976800
 end_group
 Read {
  inputs 0
- file_type mov
- file Z:/Downloads/Footage/dance2.mp4
- format "1920 1080 0 0 1920 1080 1 HD_1080"
- last 608
- origlast 608
- origset true
- name Read4
- xpos -948
- ypos -532
-}
-Read {
- inputs 0
  file_type png
  file Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/KM_RVM_Data/alpha/%04d.png
  format "360 640 0 0 360 640 1 "
  first 0
- last 20
- frame_mode "start at"
- frame 20
+ last 49
  origfirst 0
- origlast 20
+ origlast 49
  origset true
- version 2
- name Read2
- xpos -1257
- ypos -394
+ name Read3
+ xpos -792
+ ypos -145
 }
 Shuffle2 {
  fromInput1 {{0} B}
  fromInput2 {{0} B}
  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
- name Shuffle1
- xpos -1257
- ypos -310
-}
-Dot {
- name Dot2
- xpos -1223
- ypos -212
-}
-set N1155c800 [stack 0]
-Read {
- inputs 0
- file_type mov
- file C:/Users/kmdesk/.nuke/Km_RobustVideoMatting/Sample/Sample_Input/person.mp4
- format "360 640 0 0 360 640 1 "
- last 388
- origlast 388
- origset true
- auto_alpha true
- name Read1
- xpos -717
- ypos -377
-}
-set N68b7400 [stack 0]
-Dot {
- name Dot1
- xpos -820
- ypos -344
-}
-set N68b6c00 [stack 0]
-Grade {
- inputs 1+1
- white {2.51 0 0 1}
- white_panelDropped true
- name Grade2
- xpos -1150
- ypos -125
-}
-push $N1155c800
-push $N68b6c00
-Merge2 {
- inputs 2
- operation mask
- name Merge1
- xpos -1152
- ypos -215
-}
-Constant {
- inputs 0
- channels rgb
- color {0.006999993231 0.349999994 0 1}
- format "360 640 0 0 360 640 1 "
- name Constant1
- xpos -1437
- ypos -204
-}
-Merge2 {
- inputs 2
- name Merge2
- xpos -1246
- ypos -95
+ name Shuffle2
+ xpos -792
+ ypos -61
 }
 push 0
 Viewer {
  inputs 2
- frame 30
+ frame 16
  frame_range 20-40
- frame_range_lock true
  input_number 1
  name Viewer1
- xpos -869
- ypos 13
+ xpos -1055
+ ypos 64
 }
-push $N68b7400
+push $N837a2c00
 Group {
  name KM_RVM
+ knobChanged "if(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(False)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(False)\n    nuke.thisNode()\[\"filename\"].setVisible(False)\nelse:\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(True)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(True)\n    nuke.thisNode()\[\"filename\"].setVisible(True)"
  tile_color 0xcd9bffff
  label "Robust Video\nMatting v1.0\n"
  selected true
- xpos -717
- ypos -248
+ xpos -792
+ ypos -237
  addUserKnob {20 User l "Km Robust Video Matting"}
  addUserKnob {26 title l " " T "<font size='5'><b>   KM Robust Video Matting </b></font> <br>\n"}
+ addUserKnob {4 pulldown_node_input l Input M {"Node Input" "File Path" "" "" "" ""}}
+ pulldown_node_input "File Path"
+ addUserKnob {26 text_selectfile l "<b>Select File</b>"}
+ addUserKnob {26 text_png_only l " " T "Only PNG seqeunce or .mp4 file is supported "}
+ addUserKnob {2 filename l Filepath}
+ filename Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/Sample_Input/person_short.mp4
  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
  addUserKnob {26 text_run l <b>Run</b>}
  addUserKnob {6 checkbox_gpu l GPU +STARTLINE}
  checkbox_gpu true
- addUserKnob {22 btn_run l Run T "\n\nimport ctypes\nimport glob\nimport json\nimport os\nimport platform\nimport re\nimport shutil\nimport socket\nimport subprocess\nimport threading\nimport time\n\n\nPlugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\ncurrent_data_path = nuke.script_directory() + \"/\"+nuke.thisNode().name()+\"_Data\" \nprecomp_temp_dir = current_data_path+\"/Temp/\"\nalpha_output_path = current_data_path + \"/alpha/\" \nref_node = nuke.thisNode() # current node as position reference\n\n\n# Get current node\ncurrent_node = nuke.thisNode()\nframe_range = \"\"\nstart_frame_number = 0\n\n\nsocket_data = \"0\"\nprocessIsDone = False\nDevice_GPU = False\n\n\n# check if GPU\nif(nuke.thisNode()\[\"checkbox_gpu\"].value()):\n    Device_GPU = True\n\n\n\n\n\ndef run_rvm_core() : \n    global processIsDone\n    run_cmd = Plugin_Path+  \"/RVM_Core/Run.cmd\"\n    print(run_cmd)\n    # p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)\n    # (output, err) = p.communicate()  \n    # p_status = p.wait()\n    #print(\"Command output: \" + output)\n\n\n    # Check if process is done \n    # if \"Process is done\" in output:\n    #     processIsDone = True  \n    commands = u'/k ' + r\"\{\}\".format(run_cmd)\n    ctypes.windll.shell32.ShellExecuteW(\n            None,\n            u\"\", #\"runas\"\n            u\"cmd.exe\",\n            commands,\n            None,\n            1\n        )\n\n\ndef rvm_status_update():\n    print(\"start status update thread\")\n    global processIsDone\n    while not processIsDone :\n        #processIsDone = data\[\"process_is_done\"]\n        time.sleep( 1 )\n        # print(\"progressed frames : \"+ socket_data)\n        with open(json_file, 'r') as f:\n            data = json.load(f)\n        processIsDone = data\[\"process_is_done\"]\n    print(\"loop ended\")\n    nuke.executeInMainThread( CreateReadNode, args=() )\n\n\n# def rvm_socket_listener():\n#     global socket_data\n#     # TCP socket to get progress value from KM_inference.py\n#     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n#     sock.bind(('localhost', 5000))\n#     sock.listen(1)\n#     connection, address = sock.accept()\n#     # Receive progress updates from the client\n#     while True:\n#         data = connection.recv(1024).decode('utf-8')\n#         if not data:\n#             break\n#         socket_data = data\n#         #print(f\"Progress: \{progress\} out of 100\")\n#     # Close the connection\n#     connection.close()\n\n\n# Check if the current node has an input\nif current_node.inputs():\n\n\n    # Get the frame range of project\n    frame_first = str(int(nuke.root()\[\"first_frame\"].getValue()))\n    frame_last = str(int(nuke.root()\[\"last_frame\"].getValue()))\n    frame_range = frame_first + \"-\"+frame_last\n\n\n    # Get frame range from user\n    frames_input = nuke.getFramesAndViews('get range',frame_range)\n    frame_first = int(frames_input\[0].split('-')\[0])\n    frame_last = int(frames_input\[0].split('-')\[1])\n    start_frame_number = frame_first\n\n\n    # add data path to json file \n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"current_data_path\"] = current_data_path\n    data\[\"process_is_done\"] = False\n    data\[\"device_GPU\"] = Device_GPU\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n\n\n\n    # remove old files\n    if os.path.exists(precomp_temp_dir):\n        shutil.rmtree(precomp_temp_dir)\n    if os.path.exists(current_data_path + \"/alpha/\"):\n        shutil.rmtree(current_data_path + \"/alpha/\")\n    if os.path.exists(current_data_path + \"/com/\"):\n        shutil.rmtree(current_data_path + \"/com/\")\n    if os.path.exists(current_data_path + \"/fgr/\"):\n        shutil.rmtree(current_data_path + \"/fgr/\")\n    nuke.execute(nuke.toNode('RVM_Write_Image'), start=frame_first, end=frame_last)\n\n\n    threading.Thread( None, run_rvm_core).start()\n    #threading.Thread( None, rvm_socket_listener).start()\n    threading.Thread( None, rvm_status_update).start()\n\n\n\nelse:\n    # The current node has no inputs\n    nuke.message(\"Current node has no input!\")\n\n\n\n\n# def rename_png_sequence():\n#     \"\"\"RVM png seq starts with 0, so we rename them to match with input frame numbers\"\"\"\n#     global start_frame_number\n#     # Specify the directory containing the PNG images\n#     directory = alpha_output_path\n#     print(\"rename : \"+alpha_output_path)\n\n\n#     # Get the list of PNG images in the directory\n#     images = \[f for f in os.listdir(directory) if f.endswith('.png')]\n\n\n#     # Sort the images by their names\n#     images.sort(key=lambda s: int(s.split('.')\[0]))\n\n\n#     # Rename the images\n#     for i, image in enumerate(images):\n#         new_name = '%04d.png' % (start_frame_number + i)\n#         os.rename(os.path.join(directory, image), os.path.join(directory, new_name))\n\n\n\ndef CreateReadNode():\n    global ref_node\n    print(\"CreateReadNode start\")\n    fileName = alpha_output_path + \"####.png\"\n    isSequence = True\n    readNode = nuke.createNode(\"Read\",inpanel=False)\n    if isSequence : # using v!ctor tools code(by Victor Perez ) for creating read node for sequence . https://www.nukepedia.com/gizmos/image/vctor-tools\n        readNode.knob('file').setValue(fileName)\n        cleanPath = nukescripts.replaceHashes(fileName) \n        padRE = re.compile('%0(\\d+)d') \n        padMatch = padRE.search(cleanPath)         \n        if padMatch: \n            padSize = int(padMatch.group(1)) \n            frameList = sorted(glob.iglob(padRE.sub('\[0-9]' * padSize, cleanPath))) \n            first = os.path.splitext(frameList\[0])\[0]\[-padSize:] \n            last = os.path.splitext(frameList\[-1])\[0]\[-padSize:] \n            if platform.system() == \"Windows\":\n                readNode\['file'].fromUserText('%s %s-%s' % (cleanPath, first, last))\n            else : # for linux\n                readNode\['file'].fromUserText(cleanPath)\n                readNode\['first'].setValue(int(nuke.root()\[\"first_frame\"].getValue())) # code above doesn't work properly for linux so we set first & last from project\n                readNode\['last'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))\n                readNode\['origfirst'].setValue(int(nuke.root()\[\"first_frame\"].getValue()))\n                readNode\['origlast'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))\n\n\n    readNode.knob('frame').setValue(str(start_frame_number))\n    readNode.knob('frame_mode').setValue(\"start at\")\n    print(\"start set pos\")\n    # set position\n    print(\"read node name :\" + readNode.name())\n    print(\"ref node name :\" + ref_node.name())\n    readNode.setXpos(ref_node.xpos())\n    readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)\n    print(\"start create shuffle\")\n    # Create the Shuffle node\n    shuffle2_node = nuke.createNode('Shuffle2',inpanel=False)\n    layers_in =  \['rgba.red', 'rgba.red', 'rgba.red', 'rgba.red']\n    layers_out = \['rgba.red', 'rgba.green', 'rgba.blue', 'rgba.alpha']\n    mapping = zip(\[0, 0, 0, 0], layers_in, layers_out)\n    shuffle2_node\['mappings'].setValue(mapping)\n    shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 20)\n    print(\"CreateReadNode end\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n#p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)\n#(output, err) = p.communicate()  \n#os.chmod(python_path, 0o777)\n#mask = oct(os.stat(python_path).st_mode)\[-3:] \n#print(mask)\n#os.system(\"start /B start cmd.exe @cmd /k \" + run_cmd)\n#os.startfile(run_file, 'open')" +STARTLINE}
+ addUserKnob {22 btn_run l Run T "\n\nimport ctypes\nimport glob\nimport json\nimport os\nimport platform\nimport re\nimport shutil\nimport socket\nimport subprocess\nimport threading\nimport time\n\n\nPlugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\ncurrent_data_path = nuke.script_directory() + \"/\"+nuke.thisNode().name()+\"_Data\" \nprecomp_temp_dir = current_data_path+\"/Temp/\"\nalpha_output_path = current_data_path + \"/alpha/\" \nref_node = nuke.thisNode() # current node as position reference\ninput_path = precomp_temp_dir\n\n\n# Get current node\ncurrent_node = nuke.thisNode()\nframe_range = \"\"\nstart_frame_number = 0\n\n\nsocket_data = \"0\"\nprocessIsDone = False\nDevice_GPU = False\nInputIsNodeInput = False # input : node input / selected file path\nreadyToRun = False\n\n\n# check if GPU\nif(nuke.thisNode()\[\"checkbox_gpu\"].value()):\n    Device_GPU = True\n\n\n# check  whether input is node input or selected file path\nif(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    InputIsNodeInput = True\n\n\n\ndef run_rvm_core() : \n    global processIsDone\n    run_cmd = Plugin_Path+  \"/RVM_Core/Run.cmd\"\n    print(run_cmd)\n    # p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)\n    # (output, err) = p.communicate()  \n    # p_status = p.wait()\n    #print(\"Command output: \" + output)\n\n\n    # Check if process is done \n    # if \"Process is done\" in output:\n    #     processIsDone = True  \n    commands = u'/k ' + r\"\{\}\".format(run_cmd)\n    ctypes.windll.shell32.ShellExecuteW(\n            None,\n            u\"\", #\"runas\"\n            u\"cmd.exe\",\n            commands,\n            None,\n            1\n        )\n\n\ndef rvm_status_update():\n    print(\"start status update thread\")\n    global processIsDone\n    while not processIsDone :\n        #processIsDone = data\[\"process_is_done\"]\n        time.sleep( 1 )\n        # print(\"progressed frames : \"+ socket_data)\n        with open(json_file, 'r') as f:\n            data = json.load(f)\n        processIsDone = data\[\"process_is_done\"]\n    print(\"loop ended\")\n    nuke.executeInMainThread( CreateReadNode, args=() )\n\n\n# def rvm_socket_listener():\n#     global socket_data\n#     # TCP socket to get progress value from KM_inference.py\n#     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n#     sock.bind(('localhost', 5000))\n#     sock.listen(1)\n#     connection, address = sock.accept()\n#     # Receive progress updates from the client\n#     while True:\n#         data = connection.recv(1024).decode('utf-8')\n#         if not data:\n#             break\n#         socket_data = data\n#         #print(f\"Progress: \{progress\} out of 100\")\n#     # Close the connection\n#     connection.close()\n\n\n\n\n# remove old files\nif os.path.exists(precomp_temp_dir):\n    shutil.rmtree(precomp_temp_dir)\nif os.path.exists(current_data_path + \"/alpha/\"):\n    shutil.rmtree(current_data_path + \"/alpha/\")\nif os.path.exists(current_data_path + \"/com/\"):\n    shutil.rmtree(current_data_path + \"/com/\")\nif os.path.exists(current_data_path + \"/fgr/\"):\n    shutil.rmtree(current_data_path + \"/fgr/\")\n\n\n# Check if the current node has an input\nif InputIsNodeInput :\n    if current_node.inputs() :\n        # Get the frame range of project\n        frame_first = str(int(nuke.root()\[\"first_frame\"].getValue()))\n        frame_last = str(int(nuke.root()\[\"last_frame\"].getValue()))\n        frame_range = frame_first + \"-\"+frame_last\n\n\n        # Get frame range from user\n        frames_input = nuke.getFramesAndViews('get range',frame_range)\n        frame_first = int(frames_input\[0].split('-')\[0])\n        frame_last = int(frames_input\[0].split('-')\[1])\n        start_frame_number = frame_first\n        # Render node input to temp dir\n        nuke.execute(nuke.toNode('RVM_Write_Image'), start=frame_first, end=frame_last)\n        readyToRun = True\n    else:\n        nuke.message(\"Node has no input !\")\nelse : # if input is selected file\n    if nuke.thisNode()\[\"filename\"].value() != \"\" :\n        input_path = nuke.thisNode()\[\"filename\"].value()\n        if input_path\[-4:]!= \".mp4\" :\n            input_path = os.path.dirname(input_path) + \"/\"\n        readyToRun = True\n    else:\n        nuke.message(\"filename is empy\")\n\n\nif readyToRun :\n    # add data path to json file \n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"current_data_path\"] = current_data_path\n    data\[\"input_path\"] = input_path\n    data\[\"process_is_done\"] = False\n    data\[\"device_GPU\"] = Device_GPU\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n\n\n    threading.Thread( None, run_rvm_core).start()\n    #threading.Thread( None, rvm_socket_listener).start()\n    threading.Thread( None, rvm_status_update).start()\n\n\n\n\n\n# def rename_png_sequence():\n#     \"\"\"RVM png seq starts with 0, so we rename them to match with input frame numbers\"\"\"\n#     global start_frame_number\n#     # Specify the directory containing the PNG images\n#     directory = alpha_output_path\n#     print(\"rename : \"+alpha_output_path)\n\n\n#     # Get the list of PNG images in the directory\n#     images = \[f for f in os.listdir(directory) if f.endswith('.png')]\n\n\n#     # Sort the images by their names\n#     images.sort(key=lambda s: int(s.split('.')\[0]))\n\n\n#     # Rename the images\n#     for i, image in enumerate(images):\n#         new_name = '%04d.png' % (start_frame_number + i)\n#         os.rename(os.path.join(directory, image), os.path.join(directory, new_name))\n\n\n\ndef CreateReadNode():\n    global ref_node\n    print(\"CreateReadNode start\")\n    fileName = alpha_output_path + \"####.png\"\n    isSequence = True\n    readNode = nuke.createNode(\"Read\",inpanel=False)\n    if isSequence : # using v!ctor tools code(by Victor Perez ) for creating read node for sequence . https://www.nukepedia.com/gizmos/image/vctor-tools\n        readNode.knob('file').setValue(fileName)\n        cleanPath = nukescripts.replaceHashes(fileName) \n        padRE = re.compile('%0(\\d+)d') \n        padMatch = padRE.search(cleanPath)         \n        if padMatch: \n            padSize = int(padMatch.group(1)) \n            frameList = sorted(glob.iglob(padRE.sub('\[0-9]' * padSize, cleanPath))) \n            first = os.path.splitext(frameList\[0])\[0]\[-padSize:] \n            last = os.path.splitext(frameList\[-1])\[0]\[-padSize:] \n            if platform.system() == \"Windows\":\n                readNode\['file'].fromUserText('%s %s-%s' % (cleanPath, first, last))\n            else : # for linux\n                readNode\['file'].fromUserText(cleanPath)\n                readNode\['first'].setValue(int(nuke.root()\[\"first_frame\"].getValue())) # code above doesn't work properly for linux so we set first & last from project\n                readNode\['last'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))\n                readNode\['origfirst'].setValue(int(nuke.root()\[\"first_frame\"].getValue()))\n                readNode\['origlast'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))\n    if InputIsNodeInput:\n        readNode.knob('frame').setValue(str(start_frame_number))\n        readNode.knob('frame_mode').setValue(\"start at\")\n    print(\"start set pos\")\n    # set position\n    print(\"read node name :\" + readNode.name())\n    print(\"ref node name :\" + ref_node.name())\n    readNode.setXpos(ref_node.xpos())\n    readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)\n    print(\"start create shuffle\")\n    # Create the Shuffle node\n    shuffle2_node = nuke.createNode('Shuffle2',inpanel=False)\n    layers_in =  \['rgba.red', 'rgba.red', 'rgba.red', 'rgba.red']\n    layers_out = \['rgba.red', 'rgba.green', 'rgba.blue', 'rgba.alpha']\n    mapping = zip(\[0, 0, 0, 0], layers_in, layers_out)\n    shuffle2_node\['mappings'].setValue(mapping)\n    shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 20)\n    print(\"CreateReadNode end\")\n\n\n#p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)\n#(output, err) = p.communicate()  \n#os.chmod(python_path, 0o777)\n#mask = oct(os.stat(python_path).st_mode)\[-3:] \n#print(mask)\n#os.system(\"start /B start cmd.exe @cmd /k \" + run_cmd)\n#os.startfile(run_file, 'open')" +STARTLINE}
  addUserKnob {26 text_void_space l " " T " "}
  addUserKnob {26 text_output l <b>Output</b>}
  addUserKnob {22 btn_open_dir l "Open Dir" T "import os\nimport platform\nimport subprocess\n\ndef OpenFileOrFolder(path):\n    operatingSystem = platform.system()\n    if os.path.exists(path):\n        if operatingSystem == \"Windows\":\n            os.startfile(path)\n        elif operatingSystem == \"Darwin\":\n            subprocess.Popen(\[\"open\", path])\n        else:\n            subprocess.Popen(\[\"xdg-open\", path])\n\npath = nuke.script_directory() + \"/\"+nuke.thisNode().name()+\"_Data/alpha/\"\nOpenFileOrFolder(path)" +STARTLINE}
@@ -502,7 +530,7 @@ Group {
   xpos 159
   ypos 50
  }
-set N68b5c00 [stack 0]
+set N83a3e000 [stack 0]
  NoOp {
   name Result
   xpos 159
@@ -519,7 +547,7 @@ set N68b5c00 [stack 0]
   xpos 34
   ypos -11
  }
-set N68b4c00 [stack 0]
+set N83a3d000 [stack 0]
  Switch {
   inputs 2
   name Switch_output
@@ -531,22 +559,22 @@ set N68b4c00 [stack 0]
   xpos 0
   ypos 332
  }
-push $N68b5c00
-push $N68b4c00
+push $N83a3e000
+push $N83a3d000
  Switch {
   inputs 2
   name Switch_iteration
   xpos 159
   ypos -14
  }
-push $N68b4c00
+push $N83a3d000
  Write {
   file "\[python \{nuke.script_directory() + \"/\"+nuke.thisGroup().name()+\"_Data\"\}]/Temp/Input_image_#####.png"
   file_type png
   datatype "16 bit"
   create_directories true
   checkHashOnRead false
-  version 205
+  version 210
   name RVM_Write_Image
   selected true
   xpos -187

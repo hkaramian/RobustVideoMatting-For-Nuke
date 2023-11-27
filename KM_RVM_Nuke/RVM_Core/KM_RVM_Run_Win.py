@@ -13,7 +13,7 @@ with open(params_file, "r") as file:
     loaded_data = json.load(file)
 current_data_path = str(loaded_data["current_data_path"]) + "/"
 # current_directory = os.path.dirname(os.path.abspath(__file__))
-input_png_seq_directory = current_data_path + "Temp/"
+input_path = str(loaded_data["input_path"])
 
 #video_path = Current_Path+"/../Sample/Sample_Input/person_short.mp4"
 
@@ -47,7 +47,7 @@ from KM_inference import convert_video
 
 convert_video(
     model,                           # The model, can be on any device (cpu or cuda).
-    input_source = input_png_seq_directory,        # A video file or an image sequence directory.
+    input_source = input_path,        # A video file or an image sequence directory.
     output_type = 'png_sequence',             # Choose "video" or "png_sequence"
     output_composition = result_path+"com/",    # File path if video; directory path if png sequence.
     output_alpha = result_path+"alpha/",          # [Optional] Output the raw alpha prediction.
