@@ -8,24 +8,24 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
             <dock id="" hideTitles="1" activePageId="Toolbar.1">
                 <page id="Toolbar.1"/>
             </dock>
-            <split size="1238" stretch="1"/>
+            <split size="1141" stretch="1"/>
             <splitter orientation="2">
                 <split size="971"/>
-                <dock id="" activePageId="uk.co.thefoundry.scripteditor.1">
+                <dock id="" activePageId="com.adrianpueyo.KnobScripterPane">
                     <page id="uk.co.thefoundry.scripteditor.1"/>
                     <page id="com.adrianpueyo.KnobScripterPane"/>
                     <page id="Viewer.1"/>
                 </dock>
             </splitter>
-            <split size="634"/>
+            <split size="731"/>
             <splitter orientation="2">
                 <split size="484"/>
-                <dock id="" activePageId="Properties.1" focus="true">
+                <dock id="" activePageId="Properties.1">
                     <page id="Properties.1"/>
                     <page id="uk.co.thefoundry.backgroundrenderview.1"/>
                 </dock>
                 <split size="483"/>
-                <dock id="" activePageId="DAG.1">
+                <dock id="" activePageId="DAG.1" focus="true">
                     <page id="DAG.1"/>
                 </dock>
             </splitter>
@@ -36,7 +36,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 Root {
  inputs 0
  name Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/RobustVideoMatting.nk
- frame 16
+ frame 20
  first_frame 20
  last_frame 40
  lock_range true
@@ -50,18 +50,6 @@ Root {
  int16Lut sRGB
  logLut Cineon
  floatLut linear
-}
-Read {
- inputs 0
- file_type mov
- file Z:/Downloads/Footage/dance2.mp4
- format "1920 1080 0 0 1920 1080 1 HD_1080"
- last 608
- origlast 608
- origset true
- name Read4
- xpos -948
- ypos -532
 }
 Read {
  inputs 0
@@ -93,7 +81,7 @@ Dot {
  xpos -1223
  ypos -212
 }
-set N837a3000 [stack 0]
+set Nd5813000 [stack 0]
 Read {
  inputs 0
  file_type mov
@@ -107,13 +95,13 @@ Read {
  xpos -792
  ypos -366
 }
-set N837a2c00 [stack 0]
+set Nd5812c00 [stack 0]
 Dot {
  name Dot1
  xpos -895
  ypos -333
 }
-set N837a2400 [stack 0]
+set Nd5812400 [stack 0]
 Grade {
  inputs 1+1
  white {2.51 0 0 1}
@@ -122,8 +110,8 @@ Grade {
  xpos -1150
  ypos -125
 }
-push $N837a3000
-push $N837a2400
+push $Nd5813000
+push $Nd5812400
 Merge2 {
  inputs 2
  operation mask
@@ -145,6 +133,25 @@ Merge2 {
  name Merge2
  xpos -1246
  ypos -95
+}
+Viewer {
+ inputs 0
+ frame_range 20-40
+ name Viewer1
+ xpos -1055
+ ypos 64
+}
+Read {
+ inputs 0
+ file_type mov
+ file Z:/Downloads/Footage/dance2.mp4
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ last 608
+ origlast 608
+ origset true
+ name Read4
+ xpos -948
+ ypos -532
 }
 Group {
  inputs 0
@@ -247,7 +254,7 @@ Group {
   xpos 34
   ypos -11
  }
-set N83aa7c00 [stack 0]
+set Nd56bfc00 [stack 0]
  Dot {
   name Dot4
   xpos -230
@@ -313,14 +320,14 @@ set N83aa7c00 [stack 0]
   xpos -409
   ypos 241
  }
-set N83aa6c00 [stack 0]
+set Nd56bec00 [stack 0]
  Dot {
   name Dot6
   xpos -409
   ypos 340
  }
-set N83aa6800 [stack 0]
-push $N83aa6c00
+set Nd56be800 [stack 0]
+push $Nd56bec00
  Read {
   inputs 0
   file_type png
@@ -339,13 +346,13 @@ push $N83aa6c00
   xpos 159
   ypos 58
  }
-set N83aa6400 [stack 0]
+set Nd56be400 [stack 0]
  NoOp {
   name Result
   xpos 159
   ypos 176
  }
-push $N83aa7c00
+push $Nd56bfc00
  Switch {
   inputs 2
   name Switch_output
@@ -365,7 +372,7 @@ push $N83aa7c00
   xpos 34
   ypos 294
  }
-set N83aa5000 [stack 0]
+set Nd56bd000 [stack 0]
  Dot {
   name Dot5
   xpos -101
@@ -379,7 +386,7 @@ set N83aa5000 [stack 0]
   xpos -135
   ypos 333
  }
-push $N83aa5000
+push $Nd56bd000
  Switch {
   inputs 2
   name Switch_alpha
@@ -391,7 +398,7 @@ push $N83aa5000
   xpos 0
   ypos 412
  }
-push $N83aa6800
+push $Nd56be800
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -413,8 +420,8 @@ push $N83aa6800
   xpos -443
   ypos 486
  }
-push $N83aa6400
-push $N83aa7c00
+push $Nd56be400
+push $Nd56bfc00
  Switch {
   inputs 2
   name Switch_iteration
@@ -434,45 +441,12 @@ push $N83aa7c00
   ypos -20
  }
 end_group
-Read {
- inputs 0
- file_type png
- file Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/KM_RVM_Data/alpha/%04d.png
- format "360 640 0 0 360 640 1 "
- first 0
- last 49
- origfirst 0
- origlast 49
- origset true
- name Read3
- xpos -792
- ypos -145
-}
-Shuffle2 {
- fromInput1 {{0} B}
- fromInput2 {{0} B}
- mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.red 0 0 rgba.blue 0 2 rgba.red 0 0 rgba.alpha 0 3"
- name Shuffle2
- xpos -792
- ypos -61
-}
-push 0
-Viewer {
- inputs 2
- frame 16
- frame_range 20-40
- input_number 1
- name Viewer1
- xpos -1055
- ypos 64
-}
-push $N837a2c00
+push $Nd5812c00
 Group {
  name KM_RVM
- knobChanged "if(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(False)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(False)\n    nuke.thisNode()\[\"filename\"].setVisible(False)\nelse:\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(True)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(True)\n    nuke.thisNode()\[\"filename\"].setVisible(True)"
+ knobChanged "Plugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\n\n\nif(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(False)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(False)\n    nuke.thisNode()\[\"filename\"].setVisible(False)\nelse:\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(True)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(True)\n    nuke.thisNode()\[\"filename\"].setVisible(True)\n    \nif(nuke.thisNode()\[\"pulldown_python\"].value()==\"Miniconda\"):\n    nuke.thisNode()\[\"filename_python\"].setValue(\"C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe\")\n    nuke.thisNode()\[\"filename_python\"].setEnabled(False)\n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\nelse:\n    nuke.thisNode()\[\"filename_python\"].setEnabled(True)\n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)"
  tile_color 0xcd9bffff
  label "Robust Video\nMatting v1.0\n"
- selected true
  xpos -792
  ypos -237
  addUserKnob {20 User l "Km Robust Video Matting"}
@@ -482,7 +456,7 @@ Group {
  addUserKnob {26 text_selectfile l "<b>Select File</b>"}
  addUserKnob {26 text_png_only l " " T "Only PNG seqeunce or .mp4 file is supported "}
  addUserKnob {2 filename l Filepath}
- filename Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/Sample_Input/person_short.mp4
+ filename "Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/KM_RVM_Data/Temp - Copy/Input_image_#####.png"
  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
  addUserKnob {26 text_run l <b>Run</b>}
  addUserKnob {6 checkbox_gpu l GPU +STARTLINE}
@@ -500,6 +474,10 @@ Group {
  addUserKnob {26 ""}
  addUserKnob {26 text_7 l "" +STARTLINE T "Congrats, You're ready to go!\nIt's seems you missed PyToch. So you can use the tool by CPU, Not GPU\nYou need to Install components, check Help tab"}
  addUserKnob {22 btn_Check l "Check and install" T "import sys\nimport subprocess\n\n\n\ndef read_file_to_set(filename):\n    \"\"\"Reads a file and saves it in a Python set (each line as an item).\n    \"\"\"\n    # Open the file in read mode.\n    with open(filename, 'r') as f:\n        # Read all the lines from the file.\n        lines = f.readlines()\n\n\n    # Create a new set.\n    set_of_lines = set()\n\n\n    # Iterate over the list of lines and add each line to the set.\n    for line in lines:\n        set_of_lines.add(line.rstrip())\n\n\n    # Close the file.\n    f.close()\n\n\n    # Return the set.\n    return set_of_lines\n\n\nrequirements_file_name = \"Z:/Km Files/KmWorks/KmTools/Km_AI_Cleaner/Github/Km_AI_Cleaner/Km_AI_Cleaner/requirements.txt\"\nset_of_lines = read_file_to_set(requirements_file_name)\n# Print the set.\nprint(set_of_lines)\n\n\n\n\n# required  = \{'numpy', 'pandas', 'flaskwebgui==0.3.5'\} \nrequired  = set_of_lines\nmissing   = required \n# implement pip as a subprocess:\nfor package in missing:\n  subprocess.check_call(\[sys.executable, '-m', 'pip', 'install', package])\n\n" +STARTLINE}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {4 pulldown_python l Python M {Miniconda Custom "" ""}}
+ addUserKnob {2 filename_python l python.exe +DISABLED}
+ filename_python C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe
  addUserKnob {20 help_1 l Help}
  addUserKnob {35 menu M {"Hello World" "display \{return \"Hello World From \[knob name]\"\}" ""}}
  addUserKnob {68 cascading_pulldown M {t1 t2 t3 t4}}
@@ -530,7 +508,7 @@ Group {
   xpos 159
   ypos 50
  }
-set N83a3e000 [stack 0]
+set Nd7572000 [stack 0]
  NoOp {
   name Result
   xpos 159
@@ -547,7 +525,7 @@ set N83a3e000 [stack 0]
   xpos 34
   ypos -11
  }
-set N83a3d000 [stack 0]
+set Nd7571000 [stack 0]
  Switch {
   inputs 2
   name Switch_output
@@ -559,22 +537,24 @@ set N83a3d000 [stack 0]
   xpos 0
   ypos 332
  }
-push $N83a3e000
-push $N83a3d000
+push $Nd7572000
+push $Nd7571000
  Switch {
   inputs 2
   name Switch_iteration
   xpos 159
   ypos -14
  }
-push $N83a3d000
+push $Nd7571000
  Write {
   file "\[python \{nuke.script_directory() + \"/\"+nuke.thisGroup().name()+\"_Data\"\}]/Temp/Input_image_#####.png"
   file_type png
   datatype "16 bit"
   create_directories true
   checkHashOnRead false
-  version 210
+  version 211
+  in_colorspace scene_linear
+  out_colorspace scene_linear
   name RVM_Write_Image
   selected true
   xpos -187

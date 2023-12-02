@@ -28,22 +28,28 @@ import os
 import json
 
 Km_RVM_Plugin_Path = os.path.dirname(__file__).replace('\\', '/')
-
 Km_RVM_Miniconda_Python_Path = os.path.expanduser("~").replace('\\', '/') + "/miniconda3/envs/km_rvm/python.exe"
+json_file = Km_RVM_Plugin_Path +"/params.json"
 
 os.environ['Km_RVM_Plugin_Path'] = Km_RVM_Plugin_Path
 os.environ['Km_RVM_Miniconda_Python_Path'] = Km_RVM_Miniconda_Python_Path
 print("Km RVM : run_file ENV added")
 
-
-# Create Run.cmd file (based on plugin path)
 Run_File_Path_Win = Km_RVM_Plugin_Path + "/RVM_Core/KM_RVM_Run_Win.py"
 CMD_File_Path = Km_RVM_Plugin_Path+"/RVM_Core/Run.cmd"
-with open(CMD_File_Path, 'w') as f:
-    f.writelines(['"C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe" "'+Run_File_Path_Win+'"\n',
-                  #'pause\n',
-                  'exit\n',
-                  '\n'])
 
-print("Km_RobustVideoMatting : Run.cmd file added")
 
+def Update_Run_cmd_file():
+    # Create Run.cmd file (based on plugin path)
+    with open(json_file, 'r') as f:
+        data = json.load(f)
+    python_path = "\"" + data["python_path"] + "\""
+    with open(CMD_File_Path, 'w') as f:
+        f.writelines([python_path +' "'+Run_File_Path_Win+'"\n',
+                    #'pause\n',
+                    'exit\n',
+                    '\n'])
+    print("Km_RobustVideoMatting : Run.cmd file updated")
+
+
+Update_Run_cmd_file()

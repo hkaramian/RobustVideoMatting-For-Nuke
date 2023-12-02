@@ -1,2 +1,3 @@
-"C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe" "C:/Users/kmdesk/.nuke/Km_RobustVideoMatting/RVM_Core/tmp_km_run_Win.py"
-pause
+"C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe" "Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/RVM_Core/KM_RVM_Run_Win.py"
+exit
+
