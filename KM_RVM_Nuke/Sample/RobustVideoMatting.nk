@@ -20,12 +20,12 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
             <split size="638"/>
             <splitter orientation="2">
                 <split size="484"/>
-                <dock id="" activePageId="Properties.1" focus="true">
+                <dock id="" activePageId="Properties.1">
                     <page id="Properties.1"/>
                     <page id="uk.co.thefoundry.backgroundrenderview.1"/>
                 </dock>
                 <split size="483"/>
-                <dock id="" activePageId="DAG.1">
+                <dock id="" activePageId="DAG.1" focus="true">
                     <page id="DAG.1"/>
                 </dock>
             </splitter>
@@ -448,7 +448,6 @@ Group {
  knobChanged "Plugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\n\n\nif(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(False)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(False)\n    nuke.thisNode()\[\"filename\"].setVisible(False)\nelse:\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(True)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(True)\n    nuke.thisNode()\[\"filename\"].setVisible(True)\n    \nif(nuke.thisNode()\[\"pulldown_python\"].value()==\"Miniconda\"):\n    nuke.thisNode()\[\"filename_python\"].setValue(\"C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe\")\n    nuke.thisNode()\[\"filename_python\"].setEnabled(False)\n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n    Update_Run_cmd_file()\nelse:\n    nuke.thisNode()\[\"filename_python\"].setEnabled(True)\n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n    Update_Run_cmd_file()"
  tile_color 0xcd9bffff
  label "Robust Video\nMatting v1.0\n"
- selected true
  xpos -792
  ypos -237
  addUserKnob {20 User l "Km Robust Video Matting"}
