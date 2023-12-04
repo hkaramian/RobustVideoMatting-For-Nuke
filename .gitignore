@@ -1,4 +1,6 @@
 .DS_Store
+*.DS_Store
+**/.DS_Store
 *.db
 KM_RVM_Nuke/RVM_Core/.DS_Store
 *.pyc
