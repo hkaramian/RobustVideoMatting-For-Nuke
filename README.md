@@ -28,32 +28,37 @@ All footage in the video are available in [Google Drive](https://drive.google.co
 nuke.pluginAddPath('./KM_RVM_Nuke')
 ```
 ### Install Dependencies
-#### Method 1 (recomended) :
+#### Method 1 (recommended) :
 1. Install Miniconda from here : 
 https://docs.conda.io/projects/miniconda/en/latest/
 
-2. Open "Anaconda_Prompt" located in KM_RVM_Nuke folder (or simply search "Anaconda Prompt" in windows search bar)
-So run bellow commands line by line
+2. Open "Anaconda Prompt" located in KM_RVM_Nuke folder.
+Run bellow commands, line by line
 ```sh
 conda create -n km_rvm python=3.8.5
 conda activate km_rvm
-pip install -r ./requirements_inference.txt
+pip install -r ./requirements.txt
 ```
 
 All set up, You ready to go ! 
 
-#### Method 2  :
-If you have own python installed and you are familiar with installing packages, then install dependencies using "requirements_inference_Km.txt" file.
-Then in dependencies tab of the gizmo, set python path to you custom python. 
-
 <center>
-<a href="https://vimeo.com/664873484" target="_blank">Watch at Vimeo</a>
+<a href="https://vimeo.com/664873484" target="_blank">Install Video Here</a>
 
 - - - - - - - - - - - - - - - - - - - - - - - - 
 </center>
 
- 
- 
+
+
+#### Method 2  :
+If you have your own python installed and you are familiar with installing packages,  install dependencies using "requirements_inference_Km.txt" file.
+Then in dependencies tab of the gizmo, set python path to you custom python. 
+
+### Check Dependencies
+In Dependencies tab, click on "Check Dependencies" button to show your system configs. Compare it to the requirements.  
+<p align="center">
+ <img src="documentation/images/Dependencies_tab.jpg">
+ </p>
 
 ### Compatibility
 OS : Window
@@ -62,14 +67,11 @@ Nuke Version: 15.x, 14.x, 13.x, 12.x
 
 
 
-### Installation
+## Usage
 
-
-
-### ScreenShots
 <p align="center">
-<img src="https://user-images.githubusercontent.com/93508495/149018084-81afa661-64d6-4ff8-88d3-294df1f36e59.png">
-</p>
+<img src="documentation/images/KM_RVM.jpg">
+
 
  
 Also Avaiable in : 

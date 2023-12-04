@@ -49,7 +49,7 @@ def Update_Run_cmd_file():
                     #'pause\n',
                     'exit\n',
                     '\n'])
-    print("Km_RobustVideoMatting : Run.cmd file updated")
+    #print("Km_RobustVideoMatting : Run.cmd file updated")
 
 
 Update_Run_cmd_file()

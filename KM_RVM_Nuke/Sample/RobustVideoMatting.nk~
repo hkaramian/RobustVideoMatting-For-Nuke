@@ -8,7 +8,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
             <dock id="" hideTitles="1" activePageId="Toolbar.1">
                 <page id="Toolbar.1"/>
             </dock>
-            <split size="1238" stretch="1"/>
+            <split size="1234" stretch="1"/>
             <splitter orientation="2">
                 <split size="971"/>
                 <dock id="" activePageId="uk.co.thefoundry.scripteditor.1">
@@ -17,15 +17,15 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
                     <page id="Viewer.1"/>
                 </dock>
             </splitter>
-            <split size="634"/>
+            <split size="638"/>
             <splitter orientation="2">
                 <split size="484"/>
-                <dock id="" activePageId="Properties.1" focus="true">
+                <dock id="" activePageId="Properties.1">
                     <page id="Properties.1"/>
                     <page id="uk.co.thefoundry.backgroundrenderview.1"/>
                 </dock>
                 <split size="483"/>
-                <dock id="" activePageId="DAG.1">
+                <dock id="" activePageId="DAG.1" focus="true">
                     <page id="DAG.1"/>
                 </dock>
             </splitter>
@@ -81,7 +81,7 @@ Dot {
  xpos -1223
  ypos -212
 }
-set Nbc06b800 [stack 0]
+set N9229b800 [stack 0]
 Read {
  inputs 0
  file_type mov
@@ -95,13 +95,13 @@ Read {
  xpos -792
  ypos -366
 }
-set Nbc06b400 [stack 0]
+set N9229b400 [stack 0]
 Dot {
  name Dot1
  xpos -895
  ypos -333
 }
-set Nbc06ac00 [stack 0]
+set N9229ac00 [stack 0]
 Grade {
  inputs 1+1
  white {2.51 0 0 1}
@@ -110,8 +110,8 @@ Grade {
  xpos -1150
  ypos -125
 }
-push $Nbc06b800
-push $Nbc06ac00
+push $N9229b800
+push $N9229ac00
 Merge2 {
  inputs 2
  operation mask
@@ -243,7 +243,7 @@ Group {
   xpos 34
   ypos -11
  }
-set Nbc068800 [stack 0]
+set N92298800 [stack 0]
  Dot {
   name Dot4
   xpos -230
@@ -309,14 +309,14 @@ set Nbc068800 [stack 0]
   xpos -409
   ypos 241
  }
-set Nbbb67400 [stack 0]
+set N91d97400 [stack 0]
  Dot {
   name Dot6
   xpos -409
   ypos 340
  }
-set Nbbb67000 [stack 0]
-push $Nbbb67400
+set N91d97000 [stack 0]
+push $N91d97400
  Read {
   inputs 0
   file_type png
@@ -335,13 +335,13 @@ push $Nbbb67400
   xpos 159
   ypos 58
  }
-set Nbbb66c00 [stack 0]
+set N91d96c00 [stack 0]
  NoOp {
   name Result
   xpos 159
   ypos 176
  }
-push $Nbc068800
+push $N92298800
  Switch {
   inputs 2
   name Switch_output
@@ -361,7 +361,7 @@ push $Nbc068800
   xpos 34
   ypos 294
  }
-set Nbbb65800 [stack 0]
+set N91d95800 [stack 0]
  Dot {
   name Dot5
   xpos -101
@@ -375,7 +375,7 @@ set Nbbb65800 [stack 0]
   xpos -135
   ypos 333
  }
-push $Nbbb65800
+push $N91d95800
  Switch {
   inputs 2
   name Switch_alpha
@@ -387,7 +387,7 @@ push $Nbbb65800
   xpos 0
   ypos 412
  }
-push $Nbbb67000
+push $N91d97000
  Shuffle2 {
   fromInput1 {{0} B}
   fromInput2 {{0} B}
@@ -409,8 +409,8 @@ push $Nbbb67000
   xpos -443
   ypos 486
  }
-push $Nbbb66c00
-push $Nbc068800
+push $N91d96c00
+push $N92298800
  Switch {
   inputs 2
   name Switch_iteration
@@ -442,22 +442,20 @@ Read {
  xpos -948
  ypos -532
 }
-push $Nbc06b400
+push $N9229b400
 Group {
  name KM_RVM
  knobChanged "Plugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\n\n\nif(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(False)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(False)\n    nuke.thisNode()\[\"filename\"].setVisible(False)\nelse:\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(True)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(True)\n    nuke.thisNode()\[\"filename\"].setVisible(True)\n    \nif(nuke.thisNode()\[\"pulldown_python\"].value()==\"Miniconda\"):\n    nuke.thisNode()\[\"filename_python\"].setValue(\"C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe\")\n    nuke.thisNode()\[\"filename_python\"].setEnabled(False)\n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n    Update_Run_cmd_file()\nelse:\n    nuke.thisNode()\[\"filename_python\"].setEnabled(True)\n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n    Update_Run_cmd_file()"
  tile_color 0xcd9bffff
  label "Robust Video\nMatting v1.0\n"
- selected true
  xpos -792
  ypos -237
  addUserKnob {20 User l "Km Robust Video Matting"}
  addUserKnob {26 title l " " T "<font size='5'><b>   KM Robust Video Matting </b></font> <br>\n"}
  addUserKnob {4 pulldown_node_input l Input M {"Node Input" "File Path" "" "" "" ""}}
- pulldown_node_input "File Path"
- addUserKnob {26 text_selectfile l "<b>Select File</b>"}
- addUserKnob {26 text_png_only l " " T "Only PNG seqeunce or .mp4 file is supported "}
- addUserKnob {2 filename l Filepath}
+ addUserKnob {26 text_selectfile l "<b>Select File</b>" +HIDDEN}
+ addUserKnob {26 text_png_only l " " +HIDDEN T "Only PNG seqeunce or .mp4 file is supported "}
+ addUserKnob {2 filename l Filepath +HIDDEN}
  filename "Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/KM_RVM_Data/Temp - Copy/Input_image_#####.png"
  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
  addUserKnob {26 text_run l <b>Run</b>}
@@ -468,25 +466,21 @@ Group {
  addUserKnob {26 text_output l <b>Output</b>}
  addUserKnob {22 btn_open_dir l "Open Dir" T "import os\nimport platform\nimport subprocess\n\ndef OpenFileOrFolder(path):\n    operatingSystem = platform.system()\n    if os.path.exists(path):\n        if operatingSystem == \"Windows\":\n            os.startfile(path)\n        elif operatingSystem == \"Darwin\":\n            subprocess.Popen(\[\"open\", path])\n        else:\n            subprocess.Popen(\[\"xdg-open\", path])\n\npath = nuke.script_directory() + \"/\"+nuke.thisNode().name()+\"_Data/alpha/\"\nOpenFileOrFolder(path)" +STARTLINE}
  addUserKnob {6 is_processing l "is_processing (for batch render)" +INVISIBLE +STARTLINE}
- addUserKnob {20 status l Status}
+ addUserKnob {20 Dependencies}
  addUserKnob {6 color_rgba_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
- addUserKnob {26 text_1 l "" +STARTLINE T "<b>Dependencies Status : </b>"}
- addUserKnob {26 text l " " T "<br>\n <font color=green><b>Python (installed)</b></font><br><br>\n <font color=red><b>Pytorch</b></font>"}
- addUserKnob {22 btn_Check l "Check Dependencies" T "import json\nimport os\nimport subprocess\n\n\nPlugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\n\n\nwith open(json_file, 'r') as f:\n    data = json.load(f)\npython_path = \"\\\"\" + data\[\"python_path\"] + \"\\\"\"\n\n\npython_exists = False\np = subprocess.Popen(python_path +' --version', stdout=subprocess.PIPE, shell=True)\n(output, err) = p.communicate()  \np_status = p.wait()\npython_version = output\n\n\nif p.returncode == 0:\n  python_exists = True\n  print(\"Command output: \" + output)\n  p = subprocess.Popen(python_path +' -c \"import torch; print(torch.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  pytorch_version = output\n  print(\"Command output: \" + output)\n  p = subprocess.Popen(python_path +' -c \"import torchvision; print(torchvision.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  torchvision_version = output\n  print(\"Command output: \" + output)\n  p = subprocess.Popen(python_path +' -c \"import tqdm; print(tqdm.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  tqdm_version = output\n  print(\"Command output: \" + output)\n  p = subprocess.Popen(python_path +' -c \"import pims; print(pims.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  pims_version = output\n  print(\"Command output: \" + output)\n  p = subprocess.Popen(python_path +' -c \"import av; print(av.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  av_version = output\n  print(\"Command output: \" + output)\nelse:\n  print(\"python not found\")\n\n\n\n" +STARTLINE}
- addUserKnob {26 text_Dependencies_Guide l " " T "<br><b>Dependencies Guide : </b><br><br><a style=\"text-decoration:none;color :white\" href=\"https://github.com/hkaramian/RobustVideoMatting-For-Nuke\">github.com/hkaramian/RobustVideoMatting-For-Nuke</a>"}
+ addUserKnob {26 text_1 l "" +STARTLINE T "<font size='5'><b>Check Dependencies </b></font>"}
+ addUserKnob {26 text_3 l " " T " "}
+ addUserKnob {26 text_2 l "<b> Requirements </b>" T "Python >= 3.8.5 | av >= 8.0.3 | torch >= 1.9.0 <br>\ntorchvision >= 0.10.0 | \ntqdm >= 4.61.1 | \npims >= 0.5 \n<br>"}
+ addUserKnob {26 text_depend_info l " <b>Your System </b>" T "<html>\n Python 3.8.5\r\n | av 8.0.3\r\n | torch 1.9.0+cpu\r\n<br> torchvision 0.10.0+cpu\r\n | tqdm 4.61.1\r\n | pims 0.5\r\n\n"}
+ addUserKnob {26 text l " " T " "}
+ addUserKnob {22 btn_Check l "Check Dependencies" T "import json\nimport os\nimport subprocess\n\n\nPlugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\n#ssss = \"C:/Users/%USERNAME%/miniconda3/python.exe\"\nwith open(json_file, 'r') as f:\n    data = json.load(f)\npython_path = \"\\\"\" + data\[\"python_path\"] + \"\\\"\"\n\n\npython_version = \"\"\npytorch_version = \"\"\ntorchvision_version = \"\"\ntqdm_version = \"\"\npims_version = \"\"\nav_version = \"\"\n# check python \np = subprocess.Popen(python_path +' --version', stdout=subprocess.PIPE, shell=True)\n(output, err) = p.communicate()  \np_status = p.wait()\n\n\nif p.returncode == 0: # if python exist\n  python_version = output\n  p = subprocess.Popen(python_path +' -c \"import torch; print(torch.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    pytorch_version = output\n  else:\n     pytorch_version = \"not found\"\n  print(\"pytorch_version: \" + pytorch_version)\n  p = subprocess.Popen(python_path +' -c \"import torchvision; print(torchvision.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    torchvision_version = output\n  else:\n     torchvision_version = \"not found\"\n  p = subprocess.Popen(python_path +' -c \"import tqdm; print(tqdm.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    tqdm_version = output\n  else:\n     tqdm_version = \"not found\"\n  p = subprocess.Popen(python_path +' -c \"import pims; print(pims.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    pims_version = output\n  else:\n     pims_version = \"not found\"\n\n\n  p = subprocess.Popen(python_path +' -c \"import av; print(av.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    av_version = output\n  else:\n     av_version = \"not found\"\nelse:\n  python_version = \"Python not found\"\n  pytorch_version = \"not found\"\n  torchvision_version = \"not found\"\n  tqdm_version = \"not found\"\n  pims_version = \"not found\"\n  av_version = \"not found\"\n\n\n\ndependencies_str = \"\"\"<html>\n %s | av %s | torch %s<br> torchvision %s | tqdm %s | pims %s\n\"\"\" % (\n    python_version,\n    av_version,\n    pytorch_version,\n    torchvision_version,\n    tqdm_version,\n    pims_version\n)\n\n\n#print(dependencies_str)\nnuke.thisNode()\[\"text_depend_info\"].setValue(dependencies_str)" +STARTLINE}
+ addUserKnob {26 text_Dependencies_Guide l " " T "<br><b>Dependencies Installation Guide : </b><br><br><a style=\"text-decoration:none;color :white\" href=\"https://github.com/hkaramian/RobustVideoMatting-For-Nuke\">github.com/hkaramian/RobustVideoMatting-For-Nuke</a>"}
  addUserKnob {26 ""}
  addUserKnob {4 pulldown_python l Python M {Miniconda Custom "" ""}}
  addUserKnob {2 filename_python l python.exe +DISABLED}
  filename_python C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe
  addUserKnob {20 help_1 l Help}
- addUserKnob {35 menu M {"Hello World" "display \{return \"Hello World From \[knob name]\"\}" ""}}
- addUserKnob {68 cascading_pulldown M {t1 t2 t3 t4}}
- addUserKnob {4 pulldown M {t1 t2 t3 t4}}
- addUserKnob {22 python_button T "if not nuke.thisNode()\[\"is_processing\"].value() :\n    print(\"asdasd\")" +STARTLINE}
- addUserKnob {19 color_rgba}
- color_rgba {0 0 0 0}
- addUserKnob {6 color_rgba_panelDropped l "panel dropped state" -STARTLINE +HIDDEN}
- addUserKnob {26 text_max_frames l "Max Frames :" T 9999}
+ addUserKnob {6 color_rgba_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
  addUserKnob {20 tab_1 l About}
  addUserKnob {26 credit l "" +STARTLINE T "<font size='5'><b>Km Robust Video Matting </b></font> <br><br><br>\n\n\n\n<a style=\"color:white\" href=\"http://www.hkaramian.com\"><b >www.hkaramian.com</b></a>"}
  addUserKnob {26 ""}
@@ -508,7 +502,7 @@ Group {
   xpos 159
   ypos 50
  }
-set Nbc30a000 [stack 0]
+set N9253a000 [stack 0]
  NoOp {
   name Result
   xpos 159
@@ -525,7 +519,7 @@ set Nbc30a000 [stack 0]
   xpos 34
   ypos -11
  }
-set Nbc309000 [stack 0]
+set N92539000 [stack 0]
  Switch {
   inputs 2
   name Switch_output
@@ -537,15 +531,15 @@ set Nbc309000 [stack 0]
   xpos 0
   ypos 332
  }
-push $Nbc30a000
-push $Nbc309000
+push $N9253a000
+push $N92539000
  Switch {
   inputs 2
   name Switch_iteration
   xpos 159
   ypos -14
  }
-push $Nbc309000
+push $N92539000
  Write {
   file "\[python \{nuke.script_directory() + \"/\"+nuke.thisGroup().name()+\"_Data\"\}]/Temp/Input_image_#####.png"
   file_type png
