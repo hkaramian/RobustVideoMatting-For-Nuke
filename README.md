@@ -62,8 +62,9 @@ nuke.pluginAddPath('./KM_RVM_Nuke')
 ```
 <br>
 Restart nuke, now you can access to the node via Nodes menu under "Keying" or simply search "rvm" in nodes search bar :
+<p align="center">
 <img src="documentation/images/menu.png">
-
+ </p>
 
 ### Compatibility
 OS : Window
