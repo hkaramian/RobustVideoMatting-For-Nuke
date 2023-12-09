@@ -27,6 +27,8 @@ v0.1 | basic concept and GUI
 import os
 import json
 
+nuke.pluginAddPath('./RVM_Node/icon')
+
 Km_RVM_Plugin_Path = os.path.dirname(__file__).replace('\\', '/')
 Km_RVM_Miniconda_Python_Path = os.path.expanduser("~").replace('\\', '/') + "/miniconda3/envs/km_rvm/python.exe"
 json_file = Km_RVM_Plugin_Path +"/params.json"

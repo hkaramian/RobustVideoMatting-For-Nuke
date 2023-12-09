@@ -21,12 +21,8 @@ All footage in the video are available in [Google Drive](https://drive.google.co
 
 
 ## Installation
-### Install plugin
-1. Copy 'KM_RVM_Nuke' folder to nuke plugin path (.nuke folder)
-2. Add following line to init.py file in the nuke plugin path :
-```python
-nuke.pluginAddPath('./KM_RVM_Nuke')
-```
+
+
 ### Install Dependencies
 #### Method 1 (recommended) :
 1. Install Miniconda from here : 
@@ -43,9 +39,7 @@ pip install -r ./requirements.txt
 All set up, You ready to go ! 
 
 <center>
-<a href="https://vimeo.com/664873484" target="_blank">Install Video Here</a>
-
-- - - - - - - - - - - - - - - - - - - - - - - - 
+<a href="https://vimeo.com/664873484" target="_blank">Installation Video Guide Here</a>
 </center>
 
 
@@ -60,6 +54,17 @@ In Dependencies tab, click on "Check Dependencies" button to show your system co
  <img src="documentation/images/Dependencies_tab.jpg">
  </p>
 
+### Install plugin
+1. Copy 'KM_RVM_Nuke' folder to nuke plugin path (.nuke folder)
+2. Add following line to init.py file in the nuke plugin path :
+```python
+nuke.pluginAddPath('./KM_RVM_Nuke')
+```
+<br>
+Restart nuke, now you can access to the node via Nodes menu under "Keying" or simply search "rvm" in nodes search bar :
+<img src="documentation/images/menu.png">
+
+
 ### Compatibility
 OS : Window
 
@@ -70,6 +75,8 @@ Nuke Version: 15.x, 14.x, 13.x, 12.x
 ## Usage
 
 <p align="center">
+Simply connect your input or choose file path ! 
+
 <img src="documentation/images/KM_RVM.jpg">
 
 

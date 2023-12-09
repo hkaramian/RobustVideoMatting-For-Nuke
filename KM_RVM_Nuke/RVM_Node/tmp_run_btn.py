@@ -207,7 +207,7 @@ def CreateReadNode():
     layers_out = ['rgba.red', 'rgba.green', 'rgba.blue', 'rgba.alpha']
     mapping = zip([0, 0, 0, 0], layers_in, layers_out)
     shuffle2_node['mappings'].setValue(mapping)
-    shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 20)
+    shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 30)
     print("CreateReadNode end")
 
 #p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)
