@@ -22,6 +22,9 @@ All footage in the video are available in [Google Drive](https://drive.google.co
 
 ## Installation
 
+<center>
+<a href="https://vimeo.com/664873484" target="_blank">Installation Video Guide Here</a>
+</center>
 
 ### Install Dependencies
 #### Method 1 (recommended) :
@@ -38,9 +41,6 @@ pip install -r ./requirements.txt
 
 All set up, You ready to go ! 
 
-<center>
-<a href="https://vimeo.com/664873484" target="_blank">Installation Video Guide Here</a>
-</center>
 
 
 
@@ -54,7 +54,7 @@ In Dependencies tab, click on "Check Dependencies" button to show your system co
  <img src="documentation/images/Dependencies_tab.jpg">
  </p>
 
-### Install plugin
+### Add RVM to Nuke
 1. Copy 'KM_RVM_Nuke' folder to nuke plugin path (.nuke folder)
 2. Add following line to init.py file in the nuke plugin path :
 ```python
