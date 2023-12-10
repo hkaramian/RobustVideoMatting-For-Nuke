@@ -35,8 +35,9 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
 }
 Root {
  inputs 0
- name Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/RVM_Node/Sample/Sample.nk
+ name Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/Sample/Sample.nk
  project_directory "\[python \{nuke.script_directory()\}]"
+ frame 65
  lock_range true
  format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
  proxy_type scale
@@ -49,36 +50,17 @@ Root {
  logLut Cineon
  floatLut linear
 }
-TimeOffset {
- inputs 0
- time_offset 1
- time ""
- name TimeOffset1
- xpos -823
- ypos -304
-}
 Dot {
+ inputs 0
  name Dot2
  label Matte
  note_font_size 30
- xpos -789
- ypos -239
+ xpos -797
+ ypos -223
 }
-set Nc84db800 [stack 0]
-Read {
- inputs 0
- file_type mov
- file Z:/Documents/GitHub/Km_RobustVideoMatting/KM_RVM_Nuke/RVM_Node/Sample/Sample_Input.mp4
- format "1920 1080 0 0 1920 1080 1 HD_1080"
- last 251
- origlast 251
- origset true
- auto_alpha true
- name Read1
- xpos -1152
- ypos -578
-}
+set Nfcb13c00 [stack 0]
 Dot {
+ inputs 0
  name Dot1
  tile_color 0x1fff00ff
  gl_color 0x7fff00ff
@@ -87,49 +69,14 @@ Dot {
  note_font_size 30
  note_font_color 0x1fff00ff
  xpos -1118
- ypos -419
+ ypos -487
 }
 Dot {
  name Dot3
  xpos -1118
  ypos -331
 }
-set Nc9b47400 [stack 0]
-Merge2 {
- inputs 2
- operation mask
- name Merge1
- xpos -1152
- ypos -242
-}
-set Nc84da400 [stack 0]
-Constant {
- inputs 0
- channels rgb
- color {0.006999993231 0.349999994 0 1}
- format "1920 1080 0 0 1920 1080 1 HD_1080"
- name Constant1
- xpos -1306
- ypos -156
-}
-Merge2 {
- inputs 2
- name Merge2
- xpos -1152
- ypos -132
-}
-push $Nc84da400
-push 0
-Viewer {
- inputs 2
- frame 1
- frame_range 1-40
- name Viewer1
- xpos -930
- ypos 37
-}
-push $Nc84db800
-push $Nc9b47400
+set Nfcb13400 [stack 0]
 Dot {
  name Dot4
  xpos -945
@@ -141,5 +88,29 @@ Grade {
  white_panelDropped true
  name Grade2
  xpos -979
- ypos -188
+ ypos -179
+}
+push $Nfcb13c00
+push $Nfcb13400
+Constant {
+ inputs 0
+ channels rgb
+ color {0.006999993231 0.349999994 0 1}
+ format "1920 1080 0 0 1920 1080 1 HD_1080"
+ name Constant1
+ xpos -1336
+ ypos -256
+}
+Keymix {
+ inputs 3
+ name Keymix1
+ xpos -1152
+ ypos -232
+}
+Viewer {
+ frame 65
+ frame_range 12-40
+ name Viewer1
+ xpos -930
+ ypos 37
 }

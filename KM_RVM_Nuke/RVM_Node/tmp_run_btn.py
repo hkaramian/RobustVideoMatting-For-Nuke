@@ -103,32 +103,39 @@ if os.path.exists(current_data_path + "/com/"):
 if os.path.exists(current_data_path + "/fgr/"):
     shutil.rmtree(current_data_path + "/fgr/")
 
-# Check if the current node has an input
-if InputIsNodeInput :
-    if current_node.inputs() :
-        # Get the frame range of project
-        frame_first = str(int(nuke.root()["first_frame"].getValue()))
-        frame_last = str(int(nuke.root()["last_frame"].getValue()))
-        frame_range = frame_first + "-"+frame_last
 
-        # Get frame range from user
-        frames_input = nuke.getFramesAndViews('get range',frame_range)
-        frame_first = int(frames_input[0].split('-')[0])
-        frame_last = int(frames_input[0].split('-')[1])
-        start_frame_number = frame_first
-        # Render node input to temp dir
-        nuke.execute(nuke.toNode('RVM_Write_Image'), start=frame_first, end=frame_last)
-        readyToRun = True
-    else:
-        nuke.message("Node has no input !")
-else : # if input is selected file
-    if nuke.thisNode()["filename"].value() != "" :
-        input_path = nuke.thisNode()["filename"].value()
-        if input_path[-4:]!= ".mp4" :
-            input_path = os.path.dirname(input_path) + "/"
-        readyToRun = True
-    else:
-        nuke.message("filename is empy")
+# chech if project is saved (if it has a project file)
+if nuke.Root().name() == 'Root':
+    nuke.message("You need to save the project first.")
+else :
+    # Check if current node has an input
+    if InputIsNodeInput:
+        if current_node.inputs() :
+            # Get the frame range of project
+            frame_first = str(int(nuke.root()["first_frame"].getValue()))
+            frame_last = str(int(nuke.root()["last_frame"].getValue()))
+            frame_range = frame_first + "-"+frame_last
+
+            # Get frame range from user
+            frames_input = nuke.getFramesAndViews('get range',frame_range)
+            if frames_input : # if get range not cancelled
+                frame_first = int(frames_input[0].split('-')[0])
+                frame_last = int(frames_input[0].split('-')[1])
+                start_frame_number = frame_first
+                # Render node input to temp dir
+                nuke.execute(nuke.toNode('RVM_Write_Image'), start=frame_first, end=frame_last)
+                readyToRun = True
+        else:
+            nuke.message("Node has no input !")
+    else : # if input is selected file
+        if nuke.thisNode()["filename"].value() != "" :
+            input_path = nuke.thisNode()["filename"].value()
+            if input_path[-4:]!= ".mp4" :
+                input_path = os.path.dirname(input_path) + "/"
+            readyToRun = True
+        else:
+            nuke.message("filename is empy")
+
 
 if readyToRun :
     # add data path to json file 
@@ -173,6 +180,28 @@ def CreateReadNode():
     fileName = alpha_output_path + "####.png"
     isSequence = True
     readNode = nuke.createNode("Read",inpanel=False)
+
+    readNode.knob('frame_mode').setValue("start at")
+    if InputIsNodeInput:
+        readNode.knob('frame').setValue(str(start_frame_number))
+    else:
+        readNode.knob('frame').setValue(str(1))
+
+    print("start set pos")
+    # set position
+    print("read node name :" + readNode.name())
+    print("ref node name :" + ref_node.name())
+    readNode.setXpos(ref_node.xpos())
+    readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)
+    print("start create shuffle")
+    # Create the Shuffle node
+    shuffle2_node = nuke.createNode('Shuffle2',inpanel=False)
+    layers_in =  ['rgba.red', 'rgba.red', 'rgba.red', 'rgba.red']
+    layers_out = ['rgba.red', 'rgba.green', 'rgba.blue', 'rgba.alpha']
+    mapping = zip([0, 0, 0, 0], layers_in, layers_out)
+    shuffle2_node['mappings'].setValue(mapping)
+    shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 30)
+
     if isSequence : # using v!ctor tools code(by Victor Perez ) for creating read node for sequence . https://www.nukepedia.com/gizmos/image/vctor-tools
         readNode.knob('file').setValue(fileName)
         cleanPath = nukescripts.replaceHashes(fileName) 
@@ -191,23 +220,8 @@ def CreateReadNode():
                 readNode['last'].setValue(int(nuke.root()["last_frame"].getValue()))
                 readNode['origfirst'].setValue(int(nuke.root()["first_frame"].getValue()))
                 readNode['origlast'].setValue(int(nuke.root()["last_frame"].getValue()))
-    if InputIsNodeInput:
-        readNode.knob('frame').setValue(str(start_frame_number))
-        readNode.knob('frame_mode').setValue("start at")
-    print("start set pos")
-    # set position
-    print("read node name :" + readNode.name())
-    print("ref node name :" + ref_node.name())
-    readNode.setXpos(ref_node.xpos())
-    readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)
-    print("start create shuffle")
-    # Create the Shuffle node
-    shuffle2_node = nuke.createNode('Shuffle2',inpanel=False)
-    layers_in =  ['rgba.red', 'rgba.red', 'rgba.red', 'rgba.red']
-    layers_out = ['rgba.red', 'rgba.green', 'rgba.blue', 'rgba.alpha']
-    mapping = zip([0, 0, 0, 0], layers_in, layers_out)
-    shuffle2_node['mappings'].setValue(mapping)
-    shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 30)
+
+
     print("CreateReadNode end")
 
 #p = subprocess.Popen(run_cmd, stdout=subprocess.PIPE, shell=True)
