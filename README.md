@@ -34,10 +34,12 @@ https://docs.conda.io/projects/miniconda/en/latest/
 2. Open "Anaconda Prompt" located in KM_RVM_Nuke folder.
 Run bellow commands, line by line
 ```sh
-conda create -n km_rvm python=3.9.0 cudatoolkit=10.2
+conda create -n km_rvm python=3.9.0
 conda activate km_rvm
-pip install -r ./requirements.txt
+pip install -r C:\Users\%USERNAME%\.nuke\KM_RVM_Nuke\requirements.txt
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
+In the last line, change "cu118" to your graphic card Cuda version. Cuda table is provided bellow, end of this page.  
 
 All set up, You ready to go ! 
 
