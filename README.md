@@ -37,7 +37,7 @@ Run bellow commands, line by line
 conda create -n km_rvm python=3.9.0
 conda activate km_rvm
 pip install -r C:\Users\%USERNAME%\.nuke\KM_RVM_Nuke\requirements.txt
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
 ```
 In the last line, change "cu118" to your graphic card Cuda version. Cuda table is provided bellow, end of this page.  
 
