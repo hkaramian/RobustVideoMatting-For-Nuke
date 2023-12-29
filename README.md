@@ -26,12 +26,26 @@ All footage in the video are available in [Google Drive](https://drive.google.co
 <a href="https://vimeo.com/664873484" target="_blank">Installation Video Guide Here</a>
 </center>
 
+### Add RVM to Nuke
+1. Copy 'KM_RVM_Nuke' folder to nuke plugin path (.nuke folder)
+2. Add following line to init.py file in the nuke plugin path :
+```python
+nuke.pluginAddPath('./KM_RVM_Nuke')
+```
+<br>
+Restart nuke, now you can find RVM node via Nodes menu under "Keying" or simply search "rvm" in nodes search bar :
+<p align="center">
+<img src="documentation/images/menu.png">
+ </p>
+
+
+
 ### Install Dependencies
 #### Method 1 (recommended) :
-1. Install Miniconda from here : 
-https://docs.conda.io/projects/miniconda/en/latest/
+1. Download and Install AnaConda from here : 
+https://www.anaconda.com/download
 
-2. Open "Anaconda Prompt" located in KM_RVM_Nuke folder.
+2. Open "Anaconda Prompt" located in "KM_RVM_Nuke" folder, or find it in windows search.
 Run bellow commands, line by line
 ```sh
 conda create -n km_rvm python=3.9.0
@@ -56,23 +70,11 @@ In Dependencies tab, click on "Check Dependencies" button to show your system co
  <img src="documentation/images/Dependencies_tab.jpg">
  </p>
 
-### Add RVM to Nuke
-1. Copy 'KM_RVM_Nuke' folder to nuke plugin path (.nuke folder)
-2. Add following line to init.py file in the nuke plugin path :
-```python
-nuke.pluginAddPath('./KM_RVM_Nuke')
-```
-<br>
-Restart nuke, now you can find RVM node via Nodes menu under "Keying" or simply search "rvm" in nodes search bar :
-<p align="center">
-<img src="documentation/images/menu.png">
- </p>
 
 ### Compatibility
 OS : Window
 
 Nuke Version: 15.x, 14.x, 13.x, 12.x 
-
 
 
 ## Usage
@@ -83,6 +85,20 @@ Simply connect your input or choose file path !
 <img src="documentation/images/KM_RVM.jpg">
 
 
+## Graphic Cards CUDA Version
+Use this table to find out which version of pytorch cuda you need 
+
+| Graphic Card | Compute Capability | Compatible CUDA Toolkit Version | Command
+|---|---|---|---|
+| NVIDIA GeForce RTX 4090 | 9.0 | 11.8 | cu118 |
+| NVIDIA GeForce RTX 3080 | 7.5 | 11.8 | cu118 |
+| NVIDIA GeForce RTX 3070 | 7.5 | 11.8 | cu118 |
+| NVIDIA GeForce RTX 3060 | 7.5 | 11.8 | cu118 |
+| NVIDIA GeForce RTX 2080 | 7.2 | 11.6 | cu116 |
+| NVIDIA GeForce RTX 2070 | 7.2 | 11.6 | cu116 |
+| NVIDIA GeForce GTX 1660 | 6.1 | 11.4 | cu114 |
+| NVIDIA GeForce GTX 1080 | 6.1 | 11.2 | cu112 |
+| NVIDIA GeForce 840M | 5.0 | 10.2 | cu102 |
  
 Also Avaiable in : 
 
