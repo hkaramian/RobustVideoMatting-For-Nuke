@@ -15,6 +15,7 @@
 
 """
 Changes Log :
+<<<<<<< Updated upstream
 v0.8 | change miniconda3 to anaconda3
 v0.7 | add batch render (Sequence render)
 v0.6 | add iteration option
@@ -23,6 +24,33 @@ v0.4 | basic functionality of give input and get result, updating GUI after proc
 v0.3 | Installing dependencies using Miniconda - Creating venv for Km_RVM
 v0.2 | define inputs and inside Group node graph
 v0.1 | basic concept and GUI
+=======
+v1.0 | - 
+v0.7 | 
+v0.6 | create read node from output, and set start frame
+v0.5 | add file input
+v0.4 | add node input, precomp render 
+v0.3 | Dependencies tab : check dependencies, set custom python
+v0.2 | Installing dependencies using Miniconda - Creating venv for Km_RVM
+v0.1 | Basic concept and GUI
+
+
+
+Dev Docs : 
+- Our files : 
+    - ./RVM_Core/KM_RVM_Run_Win.py : run convert_video function
+    - ./RVM_Core/KM_inference.py : convert_video defenition. command prompt code, where shows progress while it's running
+    - ./RVM_Core/Run.cmd : we run KM_RVM_Run_Win.py using conda python (or custom python) here.
+    - ./RVM_Node/RVM_Node.nk
+        - Run btn :
+        - Check Dependecies btn : 
+    - ./Anaconda Prompt.cmd
+    - ./init.py
+    - ./menu.py
+    - ./constants.py
+    - ./params.json
+
+>>>>>>> Stashed changes
 """
 
 import os
@@ -43,7 +71,7 @@ CMD_File_Path = Km_RVM_Plugin_Path+"/RVM_Core/Run.cmd"
 
 
 def Update_Run_cmd_file():
-    # Create Run.cmd file (based on plugin path)
+    """ Create Run.cmd file (based on plugin path) """
     with open(json_file, 'r') as f:
         data = json.load(f)
     python_path = "\"" + data["python_path"] + "\""

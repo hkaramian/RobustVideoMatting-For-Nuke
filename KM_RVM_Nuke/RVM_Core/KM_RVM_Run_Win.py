@@ -5,16 +5,13 @@ import torch
 
 Plugin_Path = os.path.dirname(os.path.abspath(__file__)).replace('\\','/')
 
-
-
 # get input seq directory path
 params_file = Plugin_Path +"/../params.json"
 with open(params_file, "r") as file:
     loaded_data = json.load(file)
 current_data_path = str(loaded_data["current_data_path"]) + "/"
-# current_directory = os.path.dirname(os.path.abspath(__file__))
 input_path = str(loaded_data["input_path"])
-
+# Sample video path for test and debug
 #video_path = Current_Path+"/../Sample/Sample_Input/person_short.mp4"
 
 device_GPU = False

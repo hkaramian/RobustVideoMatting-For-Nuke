@@ -6,8 +6,6 @@ import os
 import platform
 import re
 import shutil
-import socket
-import subprocess
 import threading
 import time
 

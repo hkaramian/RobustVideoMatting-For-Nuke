@@ -1,6 +1,4 @@
 menu = nuke.menu("Nuke")
-#Km_NGJ = menu.addMenu("KmTools")
-#Km_NGJ.addCommand("KM RVM (Robust Video Matting)", "nuke.loadToolset('"+os.path.dirname(__file__)+"/RVM_Node/RVM_Node.nk')", shortcut='')
 
 ## Define Main Menu
 menubar = nuke.menu('Nodes') ## for top menu : nuke.menu('Nuke')
