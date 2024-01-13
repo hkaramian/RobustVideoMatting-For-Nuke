@@ -15,16 +15,6 @@
 
 """
 Changes Log :
-<<<<<<< Updated upstream
-v0.8 | change miniconda3 to anaconda3
-v0.7 | add batch render (Sequence render)
-v0.6 | add iteration option
-v0.5 | create "processing..." window using pyside2 to show a gif image process, system CPU and RAM usage
-v0.4 | basic functionality of give input and get result, updating GUI after process gets done
-v0.3 | Installing dependencies using Miniconda - Creating venv for Km_RVM
-v0.2 | define inputs and inside Group node graph
-v0.1 | basic concept and GUI
-=======
 v1.0 | - 
 v0.7 | 
 v0.6 | create read node from output, and set start frame
@@ -50,7 +40,6 @@ Dev Docs :
     - ./constants.py
     - ./params.json
 
->>>>>>> Stashed changes
 """
 
 import os
