@@ -1,1 +1,1 @@
-%windir%\System32\cmd.exe "/K" C:\Users\%USERNAME%\anaconda3\Scripts\activate.bat C:\Users\%USERNAME%\anaconda3
+%windir%\System32\cmd.exe "/K" C:\Users\%USERNAME%\miniconda3\Scripts\activate.bat C:\Users\%USERNAME%\miniconda3

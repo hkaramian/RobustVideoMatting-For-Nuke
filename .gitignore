@@ -8,3 +8,4 @@ KM_RVM_Nuke/.DS_Store
 KM_RVM_Nuke/Sample/KM_RVM_Data/
 *.nk~
 *.autosave
+KM_RVM_Nuke/params.json

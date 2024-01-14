@@ -42,8 +42,8 @@ Restart nuke, now you can find RVM node via Nodes menu under "Keying" or simply 
 
 ### Install Dependencies
 #### Method 1 (recommended) :
-1. Download and Install AnaConda from here : 
-https://www.anaconda.com/download
+1. Download and Install MiniConda : 
+https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe
 
 2. Open "Anaconda Prompt" located in "KM_RVM_Nuke" folder, or find it in windows search.
 Run bellow commands, line by line
@@ -51,9 +51,14 @@ Run bellow commands, line by line
 conda create -n km_rvm python=3.9.0
 conda activate km_rvm
 pip install -r C:\Users\%USERNAME%\.nuke\KM_RVM_Nuke\requirements.txt
-pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install "av==8.0.3" "tqdm==4.61.1" "pims==0.5"
+pip install torch torchvision
 ```
-In the last line, change "cu118" to your graphic card Cuda version. Cuda table is provided bellow, end of this page.  
+Replace last line with this if you want to add gpu supoort (it needs download more dependencies and huge files): 
+```python
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+```
+, change "cu118" to your graphic card Cuda version. Cuda table is provided bellow, end of this page.  
 
 All set up, You ready to go ! 
 
@@ -100,8 +105,5 @@ Use this table to find out which version of pytorch cuda you need
 | NVIDIA GeForce GTX 1080 | 6.1 | 11.2 | cu112 |
 | NVIDIA GeForce 840M | 5.0 | 10.2 | cu102 |
  
-Also Avaiable in : 
-
-<a href="" target="_blank">NukePedia</a>
 
 
