@@ -182,7 +182,7 @@ def CreateReadNode():
 
     if not InputIsNodeInput :
         start_frame_number = nuke.getInput('Set Start At Frame', '1')
-        readNode.knob('frame_mode').setValue(int(start_frame_number))
+        readNode.knob('frame').setValue(int(start_frame_number))
 
     #print("CreateReadNode end")
 
