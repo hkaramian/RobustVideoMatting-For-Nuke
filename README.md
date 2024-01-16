@@ -26,7 +26,8 @@ All footage in the video are available in [Google Drive](https://drive.google.co
 <a href="https://vimeo.com/664873484" target="_blank">Installation Video Guide Here</a>
 </center>
 
-### Add RVM to Nuke
+
+### Add RVM node to Nuke
 1. Copy 'KM_RVM_Nuke' folder to nuke plugin path (.nuke folder)
 2. Add following line to init.py file in the nuke plugin path :
 ```python
@@ -38,8 +39,6 @@ Restart nuke, now you can find RVM node via Nodes menu under "Keying" or simply 
 <img src="documentation/images/menu.png">
  </p>
 
-
-
 ### Install Dependencies
 #### Method 1 (recommended) :
 1. Download and Install MiniConda : 
@@ -50,7 +49,6 @@ Run bellow commands, line by line
 ```sh
 conda create -n km_rvm python=3.9.0
 conda activate km_rvm
-pip install -r C:\Users\%USERNAME%\.nuke\KM_RVM_Nuke\requirements.txt
 pip install "av==8.0.3" "tqdm==4.61.1" "pims==0.5"
 pip install torch torchvision
 ```
@@ -64,10 +62,10 @@ All set up, You ready to go !
 
 
 
-
 #### Method 2  :
-If you have your own python installed and you are familiar with installing packages,  install dependencies using "requirements_inference_Km.txt" file.
-Then in dependencies tab of the gizmo, set python path to you custom python. 
+If you have your own python installed and you are familiar with installing packages,  install dependencies. Then in dependencies tab of the gizmo, set python path to you custom python. 
+
+
 
 ### Check Dependencies
 In Dependencies tab, click on "Check Dependencies" button to show your system configs. Compare it to the requirements.  
@@ -85,7 +83,10 @@ Nuke Version: 15.x, 14.x, 13.x, 12.x
 ## Usage
 
 <p align="center">
-Simply connect your input or choose file path ! 
+Simply connect your input, or choose file path ! 
+If you use node input, it will make a png seq precomp first. 
+For feeding directely a file, you need to have it as .mp4 or png sequence.
+Once job get done, roto matte node will be created. Input precomp and result will be saved in "KM_RVM_Data" folder beside your nuke project. 
 
 <img src="documentation/images/KM_RVM.jpg">
 

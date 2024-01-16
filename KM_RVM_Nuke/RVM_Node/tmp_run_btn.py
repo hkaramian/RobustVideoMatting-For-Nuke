@@ -54,7 +54,7 @@ def run_rvm_core() :
 
 
 def rvm_status_update():
-    print("start status update thread")
+    #print("start status update thread")
     global processIsDone
     while not processIsDone :
         #processIsDone = data["process_is_done"]
@@ -62,7 +62,7 @@ def rvm_status_update():
         with open(json_file, 'r') as f:
             data = json.load(f)
         processIsDone = data["process_is_done"]
-    print("loop ended")
+    #print("loop ended")
     nuke.executeInMainThread( CreateReadNode, args=() )
 
 
@@ -133,7 +133,7 @@ if readyToRun :
 
 def CreateReadNode():
     global ref_node
-    print("CreateReadNode start")
+    #print("CreateReadNode start")
     fileName = alpha_output_path + "####.png"
     isSequence = True
     readNode = nuke.createNode("Read",inpanel=False)
@@ -145,13 +145,13 @@ def CreateReadNode():
     else:
         readNode.knob('frame').setValue(str(1))
 
-    print("start set pos")
+    #print("start set pos")
     # set position
-    print("read node name :" + readNode.name())
-    print("ref node name :" + ref_node.name())
+    #print("read node name :" + readNode.name())
+    #print("ref node name :" + ref_node.name())
     readNode.setXpos(ref_node.xpos())
     readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)
-    print("start create shuffle")
+    #print("start create shuffle")
     # Create the Shuffle node
     shuffle2_node = nuke.createNode('Shuffle2',inpanel=False)
     layers_in =  ['rgba.red', 'rgba.red', 'rgba.red', 'rgba.red']
@@ -179,6 +179,10 @@ def CreateReadNode():
                 readNode['last'].setValue(int(nuke.root()["last_frame"].getValue()))
                 readNode['origfirst'].setValue(int(nuke.root()["first_frame"].getValue()))
                 readNode['origlast'].setValue(int(nuke.root()["last_frame"].getValue()))
+
+    if not InputIsNodeInput :
+        start_frame_number = nuke.getInput('Set Start At Frame', '1')
+        readNode.knob('frame_mode').setValue(int(start_frame_number))
 
     #print("CreateReadNode end")
 
