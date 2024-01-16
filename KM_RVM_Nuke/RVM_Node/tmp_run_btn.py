@@ -143,7 +143,8 @@ def CreateReadNode():
     if InputIsNodeInput:
         readNode.knob('frame').setValue(str(start_frame_number))
     else:
-        readNode.knob('frame').setValue(str(1))
+        start_frame_number = nuke.getInput('Set Start At Frame', '1')
+        readNode.knob('frame').setValue(str(start_frame_number))
 
     #print("start set pos")
     # set position
@@ -179,10 +180,6 @@ def CreateReadNode():
                 readNode['last'].setValue(int(nuke.root()["last_frame"].getValue()))
                 readNode['origfirst'].setValue(int(nuke.root()["first_frame"].getValue()))
                 readNode['origlast'].setValue(int(nuke.root()["last_frame"].getValue()))
-
-    if not InputIsNodeInput :
-        start_frame_number = nuke.getInput('Set Start At Frame', '1')
-        readNode.knob('frame').setValue(int(start_frame_number))
 
     #print("CreateReadNode end")
 
