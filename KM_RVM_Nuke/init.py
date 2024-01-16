@@ -62,6 +62,7 @@ def create_params_json_file():
             "process_is_done": True,
             "total_frames": "",
             "first_frame": "",
+            "chunk_size": "10",
             "current_data_path": ""
             }
     json_string = json.dumps(data, indent=4)

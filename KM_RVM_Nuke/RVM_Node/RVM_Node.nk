@@ -11,7 +11,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
             <split size="1238" stretch="1"/>
             <splitter orientation="2">
                 <split size="971"/>
-                <dock id="" activePageId="Viewer.1">
+                <dock id="" activePageId="com.adrianpueyo.KnobScripterPane" focus="true">
                     <page id="uk.co.thefoundry.scripteditor.1"/>
                     <page id="com.adrianpueyo.KnobScripterPane"/>
                     <page id="Viewer.1"/>
@@ -20,7 +20,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
             <split size="634"/>
             <splitter orientation="2">
                 <split size="484"/>
-                <dock id="" activePageId="Properties.1" focus="true">
+                <dock id="" activePageId="Properties.1">
                     <page id="Properties.1"/>
                     <page id="uk.co.thefoundry.backgroundrenderview.1"/>
                 </dock>
@@ -55,12 +55,12 @@ Group {
  inputs 0
  name KM_RVM
  onCreate "nuke.thisNode()\[\"rvm_node_onCreate\"].setValue(\"True\")\nnuke.thisNode()\[\"text_depend_info\"].setValue(\"Click bellow button to check\")\n\n"
- knobChanged "Plugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\n\n\n\nif(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(False)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(False)\n    nuke.thisNode()\[\"filename\"].setVisible(False)\nelse:\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(True)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(True)\n    nuke.thisNode()\[\"filename\"].setVisible(True)\n\n\n# update python path if this is a new node , on create\nrvm_node_onCreate = nuke.thisNode()\[\"rvm_node_onCreate\"]\nif (rvm_node_onCreate.value() == \"True\"):\n    rvm_node_onCreate.setValue(\"False\")\n    with open(json_file, 'r') as f:\n        data = json.load(f)   \n    python_type = data\[\"python_type\"]     \n    if(python_type==\"Miniconda\"):\n        nuke.thisNode()\[\"pulldown_python\"].setValue(\"Miniconda\")\n    else:\n        nuke.thisNode()\[\"pulldown_python\"].setValue(\"Custom\")\n    nuke.thisNode()\[\"filename_python\"].setValue(data\[\"python_path\"])\n\n\nif(nuke.thisNode()\[\"pulldown_python\"].value()==\"Miniconda\"):\n    nuke.thisNode()\[\"filename_python\"].setValue(\"C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe\")\n    nuke.thisNode()\[\"filename_python\"].setEnabled(False)\n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    data\[\"python_type\"] = \"Miniconda\"\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n    Update_Run_cmd_file()\nelse:\n    nuke.thisNode()\[\"filename_python\"].setEnabled(True)\n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    data\[\"python_type\"] = \"Custom\"\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n    Update_Run_cmd_file()\n    \n"
+ knobChanged "Plugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\nwith open(json_file, 'r') as f:\n    data = json.load(f)\n\n\nif(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(False)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(False)\n    nuke.thisNode()\[\"filename\"].setVisible(False)\nelse:\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(True)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(True)\n    nuke.thisNode()\[\"filename\"].setVisible(True)\n\n\n# update python path and chunk size if this is a new node , on create\nrvm_node_onCreate = nuke.thisNode()\[\"rvm_node_onCreate\"]\nif (rvm_node_onCreate.value() == \"True\"):\n    rvm_node_onCreate.setValue(\"False\")\n    python_type = data\[\"python_type\"]     \n    if(python_type==\"Miniconda\"):\n        nuke.thisNode()\[\"pulldown_python\"].setValue(\"Miniconda\")\n    else:\n        nuke.thisNode()\[\"pulldown_python\"].setValue(\"Custom\")\n    nuke.thisNode()\[\"filename_python\"].setValue(data\[\"python_path\"])\n    nuke.thisNode()\[\"chunk_size\"].setValue(int(data\[\"chunk_size\"]))\n\nif(nuke.thisNode()\[\"pulldown_python\"].value()==\"Miniconda\"):\n    nuke.thisNode()\[\"filename_python\"].setValue(\"C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe\")\n    nuke.thisNode()\[\"filename_python\"].setEnabled(False)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    data\[\"python_type\"] = \"Miniconda\"\nelse:\n    nuke.thisNode()\[\"filename_python\"].setEnabled(True)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    data\[\"python_type\"] = \"Custom\"\n\ndata\[\"chunk_size\"] = str(int(nuke.thisNode()\[\"chunk_size\"].getValue()))\n\nwith open(json_file, \"w\") as file:\n    json.dump(data, file)\nUpdate_Run_cmd_file()\n    \n"
  tile_color 0xbf7fffff
  label "Robust Video\nMatting v1.0\n"
  selected true
- xpos -1133
- ypos -354
+ xpos -1187
+ ypos -519
  addUserKnob {20 User l "Km Robust Video Matting"}
  addUserKnob {26 title l " " T "<font size='5'><b>   KM Robust Video Matting </b></font> <br>\n"}
  addUserKnob {4 pulldown_node_input l Input M {"Node Input" "File Path" "" "" "" ""}}
@@ -69,6 +69,8 @@ Group {
  addUserKnob {2 filename l Filepath +HIDDEN}
  addUserKnob {6 color_rgb_panelDropped l "panel dropped state" +HIDDEN +STARTLINE}
  addUserKnob {26 text_run l <b>Run</b>}
+ addUserKnob {3 chunk_size l "Chunk Size" t "Number of frames for parallel process. Play with this number to get better result base on your hardware"}
+ chunk_size 10
  addUserKnob {6 checkbox_gpu l "GPU (CUDA)" +STARTLINE}
  checkbox_gpu true
  addUserKnob {22 btn_run l Run T "import ctypes\nimport glob\nimport json\nimport os\nimport platform\nimport re\nimport shutil\nimport threading\nimport time\n\n\n\nPlugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\ncurrent_data_path = nuke.script_directory() + \"/\"+nuke.thisNode().name()+\"_Data\" \nprecomp_temp_dir = current_data_path+\"/Temp/\"\nalpha_output_path = current_data_path + \"/alpha/\" \nref_node = nuke.thisNode() # current node as position reference\ninput_path = precomp_temp_dir\n\n\n\n# Get current node\ncurrent_node = nuke.thisNode()\nframe_range = \"\"\nstart_frame_number = 0\nprocessIsDone = False\nDevice_GPU = False\nInputIsNodeInput = False # input : node input / selected file path\nreadyToRun = False\n\n\n\n# check if GPU\nif(nuke.thisNode()\[\"checkbox_gpu\"].value()):\n    Device_GPU = True\n\n\n\n# check  whether input is node input or selected file path\nif(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    InputIsNodeInput = True\n\n\n\ndef run_rvm_core() : \n    global processIsDone\n    run_cmd = Plugin_Path+  \"/RVM_Core/Run.cmd\"\n    #print(run_cmd)\n    commands = u'/k ' + r\"\{\}\".format(run_cmd)\n    ctypes.windll.shell32.ShellExecuteW(\n            None,\n            u\"\", #\"runas\"\n            u\"cmd.exe\",\n            commands,\n            None,\n            1\n        )\n\n\n\ndef rvm_status_update():\n    #print(\"start status update thread\")\n    global processIsDone\n    while not processIsDone :\n        #processIsDone = data\[\"process_is_done\"]\n        time.sleep( 1 )\n        with open(json_file, 'r') as f:\n            data = json.load(f)\n        processIsDone = data\[\"process_is_done\"]\n    #print(\"loop ended\")\n    nuke.executeInMainThread( CreateReadNode, args=() )\n\n\n\n\n# remove old files\nif os.path.exists(precomp_temp_dir):\n    shutil.rmtree(precomp_temp_dir)\nif os.path.exists(current_data_path + \"/alpha/\"):\n    shutil.rmtree(current_data_path + \"/alpha/\")\nif os.path.exists(current_data_path + \"/com/\"):\n    shutil.rmtree(current_data_path + \"/com/\")\nif os.path.exists(current_data_path + \"/fgr/\"):\n    shutil.rmtree(current_data_path + \"/fgr/\")\n\n\n\n\n# chech if project is saved (if it has a project file)\nif nuke.Root().name() == 'Root':\n    nuke.message(\"You need to save the project first.\")\nelse :\n    # Check if current node has an input\n    if InputIsNodeInput:\n        if current_node.inputs() :\n            # Get the frame range of project\n            frame_first = str(int(nuke.root()\[\"first_frame\"].getValue()))\n            frame_last = str(int(nuke.root()\[\"last_frame\"].getValue()))\n            frame_range = frame_first + \"-\"+frame_last\n\n\n\n            # Get frame range from user\n            frames_input = nuke.getFramesAndViews('get range',frame_range)\n            if frames_input : # if get range not cancelled\n                frame_first = int(frames_input\[0].split('-')\[0])\n                frame_last = int(frames_input\[0].split('-')\[1])\n                start_frame_number = frame_first\n                # Render node input to temp dir\n                nuke.execute(nuke.toNode('RVM_Write_Image'), start=frame_first, end=frame_last)\n                readyToRun = True\n        else:\n            nuke.message(\"Node has no input !\")\n    else : # if input is selected file\n        if nuke.thisNode()\[\"filename\"].value() != \"\" :\n            input_path = nuke.thisNode()\[\"filename\"].value()\n            if input_path\[-4:]!= \".mp4\" :\n                input_path = os.path.dirname(input_path) + \"/\"\n            readyToRun = True\n        else:\n            nuke.message(\"filename is empy\")\n\n\n\n\nif readyToRun :\n    # add data path to json file \n    with open(json_file, 'r') as f:\n        data = json.load(f)\n    data\[\"current_data_path\"] = current_data_path\n    data\[\"input_path\"] = input_path\n    data\[\"process_is_done\"] = False\n    data\[\"device_GPU\"] = Device_GPU\n    with open(json_file, \"w\") as file:\n        json.dump(data, file)\n        \n    threading.Thread( None, run_rvm_core).start()\n    threading.Thread( None, rvm_status_update).start()\n\n\n\n\n\ndef CreateReadNode():\n    global ref_node\n    #print(\"CreateReadNode start\")\n    fileName = alpha_output_path + \"####.png\"\n    isSequence = True\n    readNode = nuke.createNode(\"Read\",inpanel=False)\n\n\n\n    readNode.knob('frame_mode').setValue(\"start at\")\n    if InputIsNodeInput:\n        readNode.knob('frame').setValue(str(start_frame_number))\n    else:\n        start_frame_number = nuke.getInput('Set Start At Frame', '1')\n        readNode.knob('frame').setValue(str(start_frame_number))\n\n\n    #print(\"start set pos\")\n    # set position\n    #print(\"read node name :\" + readNode.name())\n    #print(\"ref node name :\" + ref_node.name())\n    readNode.setXpos(ref_node.xpos())\n    readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)\n    #print(\"start create shuffle\")\n    # Create the Shuffle node\n    shuffle2_node = nuke.createNode('Shuffle2',inpanel=False)\n    layers_in =  \['rgba.red', 'rgba.red', 'rgba.red', 'rgba.red']\n    layers_out = \['rgba.red', 'rgba.green', 'rgba.blue', 'rgba.alpha']\n    mapping = zip(\[0, 0, 0, 0], layers_in, layers_out)\n    shuffle2_node\['mappings'].setValue(mapping)\n    shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 30)\n\n\n\n    if isSequence : # using v!ctor tools code(by Victor Perez ) for creating read node for sequence . https://www.nukepedia.com/gizmos/image/vctor-tools\n        readNode.knob('file').setValue(fileName)\n        cleanPath = nukescripts.replaceHashes(fileName) \n        padRE = re.compile('%0(\\d+)d') \n        padMatch = padRE.search(cleanPath)         \n        if padMatch: \n            padSize = int(padMatch.group(1)) \n            frameList = sorted(glob.iglob(padRE.sub('\[0-9]' * padSize, cleanPath))) \n            first = os.path.splitext(frameList\[0])\[0]\[-padSize:] \n            last = os.path.splitext(frameList\[-1])\[0]\[-padSize:] \n            if platform.system() == \"Windows\":\n                readNode\['file'].fromUserText('%s %s-%s' % (cleanPath, first, last))\n            else : # for linux\n                readNode\['file'].fromUserText(cleanPath)\n                readNode\['first'].setValue(int(nuke.root()\[\"first_frame\"].getValue())) # code above doesn't work properly for linux so we set first & last from project\n                readNode\['last'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))\n                readNode\['origfirst'].setValue(int(nuke.root()\[\"first_frame\"].getValue()))\n                readNode\['origlast'].setValue(int(nuke.root()\[\"last_frame\"].getValue()))\n\n\n    #print(\"CreateReadNode end\")\n\n\n" +STARTLINE}
@@ -115,7 +117,7 @@ Group {
   xpos 159
   ypos 50
  }
-set N63edc800 [stack 0]
+set N1236c800 [stack 0]
  NoOp {
   name Result
   xpos 159
@@ -132,7 +134,7 @@ set N63edc800 [stack 0]
   xpos 34
   ypos -11
  }
-set N700f3400 [stack 0]
+set N1da83400 [stack 0]
  Switch {
   inputs 2
   name Switch_output
@@ -144,15 +146,15 @@ set N700f3400 [stack 0]
   xpos 0
   ypos 332
  }
-push $N63edc800
-push $N700f3400
+push $N1236c800
+push $N1da83400
  Switch {
   inputs 2
   name Switch_iteration
   xpos 159
   ypos -14
  }
-push $N700f3400
+push $N1da83400
  Write {
   file "\[python \{nuke.script_directory() + \"/\"+nuke.thisGroup().name()+\"_Data\"\}]/Temp/Input_image_#####.png"
   file_type png

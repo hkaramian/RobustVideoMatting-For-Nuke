@@ -11,6 +11,7 @@ with open(params_file, "r") as file:
     loaded_data = json.load(file)
 current_data_path = str(loaded_data["current_data_path"]) + "/"
 input_path = str(loaded_data["input_path"])
+chunk_size = int(loaded_data["chunk_size"])
 # Sample video path for test and debug
 #video_path = Current_Path+"/../Sample/Sample_Input/person_short.mp4"
 
@@ -51,5 +52,5 @@ convert_video(
     #output_foreground = result_path+"fgr/",     # [Optional] Output the raw foreground prediction.
     output_video_mbps = 4,             # Output video mbps. Not needed for png sequence.
     downsample_ratio = None,           # A hyperparameter to adjust or use None for auto.
-    seq_chunk = 10,                    # Process n frames at once for better parallelism.
+    seq_chunk = chunk_size,                    # Process n frames at once for better parallelism.
 )

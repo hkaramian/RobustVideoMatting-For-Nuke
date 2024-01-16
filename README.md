@@ -88,6 +88,7 @@ Simply connect your input, or choose file path !
 If you use node input, it will make a png seq precomp first. 
 For feeding directly a file, you need to have it as .mp4 or png sequence.
 Once job get done, roto matte node will be created. Input precomp and result will be saved in "KM_RVM_Data" folder beside your nuke project. 
+Chunk size : Number of frames for parallel process. Play with this number to get better result base on your hardware
 
 <img src="documentation/images/KM_RVM.jpg">
 
