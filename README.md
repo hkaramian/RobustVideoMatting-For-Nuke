@@ -1,4 +1,4 @@
-## Km_RobustVideoMatting
+## KM_RobustVideoMatting
 <a href="https://github.com/PeterL1n/RobustVideoMatting" target="_blank">RobustVideoMatting</a> Plugin for Foundry Nuke
 
 Robust Video Matting(RVM) is specifically designed for robust human video matting. Unlike existing neural models that process frames as independent images, RVM uses a recurrent neural network to process videos with temporal memory. RVM can perform matting in real-time on any videos without additional inputs. It achieves **4K 76FPS** and **HD 104FPS** on an Nvidia GTX 1080 Ti GPU.
@@ -29,7 +29,7 @@ All footage in the video are available in [Google Drive](https://drive.google.co
 
 ### Add RVM node to Nuke
 1. Copy 'KM_RVM_Nuke' folder to nuke plugin path (.nuke folder)
-2. Add following line to init.py file in the nuke plugin path :
+2. Add the following line to init.py file in the nuke plugin path :
 ```python
 nuke.pluginAddPath('./KM_RVM_Nuke')
 ```
@@ -83,9 +83,10 @@ Nuke Version: 15.x, 14.x, 13.x, 12.x
 ## Usage
 
 <p align="center">
+create rvm node by typing KM_RVM or find it in nuke nodes menu, under keying category. 
 Simply connect your input, or choose file path ! 
 If you use node input, it will make a png seq precomp first. 
-For feeding directely a file, you need to have it as .mp4 or png sequence.
+For feeding directly a file, you need to have it as .mp4 or png sequence.
 Once job get done, roto matte node will be created. Input precomp and result will be saved in "KM_RVM_Data" folder beside your nuke project. 
 
 <img src="documentation/images/KM_RVM.jpg">
