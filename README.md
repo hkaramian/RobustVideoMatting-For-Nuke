@@ -1,13 +1,5 @@
 ## KM_RobustVideoMatting
-<a href="https://github.com/PeterL1n/RobustVideoMatting" target="_blank">RobustVideoMatting</a> Plugin for Foundry Nuke
-
-Robust Video Matting(RVM) is specifically designed for robust human video matting. Unlike existing neural models that process frames as independent images, RVM uses a recurrent neural network to process videos with temporal memory. RVM can perform matting in real-time on any videos without additional inputs. It achieves **4K 76FPS** and **HD 104FPS** on an Nvidia GTX 1080 Ti GPU.
-
-
-<br>
-
-## Showreel
-Watch the showreel video ([YouTube](https://youtu.be/Jvzltozpbpk))  to see the model's performance. 
+Robust Video Matting Plugin for Foundry Nuke
 
 <p align="center">
     <a href="https://youtu.be/Jvzltozpbpk">
@@ -15,17 +7,16 @@ Watch the showreel video ([YouTube](https://youtu.be/Jvzltozpbpk))  to see the m
     </a>
 </p>
 
-All footage in the video are available in [Google Drive](https://drive.google.com/drive/folders/1VFnWwuu-YXDKG-N6vcjK_nL7YZMFapMU?usp=sharing).
+[Robust Video Matting (RVM)](https://github.com/PeterL1n/RobustVideoMatting)  is specifically designed for robust human video matting. Unlike existing neural models that process frames as independent images, RVM uses a recurrent neural network to process videos with temporal memory. RVM can perform matting in real-time on any videos without additional inputs. It achieves **4K 76FPS** and **HD 104FPS** on an Nvidia GTX 1080 Ti GPU.
 
 <br>
+
+Watch the video ([YouTube](https://youtu.be/Jvzltozpbpk))  to see the installation, usage and model's performance. 
 
 
 ## Installation
 
-<center>
-<a href="https://vimeo.com/664873484" target="_blank">Installation Video Guide Here</a>
-</center>
-
+Use the instructions bellow, or watch above video. 
 
 ### Add RVM node to Nuke
 1. Copy 'KM_RVM_Nuke' folder to nuke plugin path (.nuke folder)
