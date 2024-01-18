@@ -11,7 +11,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
             <split size="1238" stretch="1"/>
             <splitter orientation="2">
                 <split size="971"/>
-                <dock id="" activePageId="com.adrianpueyo.KnobScripterPane" focus="true">
+                <dock id="" activePageId="Viewer.1">
                     <page id="uk.co.thefoundry.scripteditor.1"/>
                     <page id="com.adrianpueyo.KnobScripterPane"/>
                     <page id="Viewer.1"/>
@@ -25,7 +25,7 @@ define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
                     <page id="uk.co.thefoundry.backgroundrenderview.1"/>
                 </dock>
                 <split size="483"/>
-                <dock id="" activePageId="DAG.1">
+                <dock id="" activePageId="DAG.1" focus="true">
                     <page id="DAG.1"/>
                 </dock>
             </splitter>
@@ -58,9 +58,8 @@ Group {
  knobChanged "Plugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\nwith open(json_file, 'r') as f:\n    data = json.load(f)\n\n\nif(nuke.thisNode()\[\"pulldown_node_input\"].value()==\"Node Input\"):\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(False)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(False)\n    nuke.thisNode()\[\"filename\"].setVisible(False)\nelse:\n    nuke.thisNode()\[\"text_selectfile\"].setVisible(True)\n    nuke.thisNode()\[\"text_png_only\"].setVisible(True)\n    nuke.thisNode()\[\"filename\"].setVisible(True)\n\n\n# update python path and chunk size if this is a new node , on create\nrvm_node_onCreate = nuke.thisNode()\[\"rvm_node_onCreate\"]\nif (rvm_node_onCreate.value() == \"True\"):\n    rvm_node_onCreate.setValue(\"False\")\n    python_type = data\[\"python_type\"]     \n    if(python_type==\"Miniconda\"):\n        nuke.thisNode()\[\"pulldown_python\"].setValue(\"Miniconda\")\n    else:\n        nuke.thisNode()\[\"pulldown_python\"].setValue(\"Custom\")\n    nuke.thisNode()\[\"filename_python\"].setValue(data\[\"python_path\"])\n    nuke.thisNode()\[\"chunk_size\"].setValue(int(data\[\"chunk_size\"]))\n\nif(nuke.thisNode()\[\"pulldown_python\"].value()==\"Miniconda\"):\n    nuke.thisNode()\[\"filename_python\"].setValue(\"C:/Users/%USERNAME%/miniconda3/envs/km_rvm/python.exe\")\n    nuke.thisNode()\[\"filename_python\"].setEnabled(False)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    data\[\"python_type\"] = \"Miniconda\"\nelse:\n    nuke.thisNode()\[\"filename_python\"].setEnabled(True)\n    data\[\"python_path\"] = nuke.thisNode()\[\"filename_python\"].getValue()\n    data\[\"python_type\"] = \"Custom\"\n\ndata\[\"chunk_size\"] = str(int(nuke.thisNode()\[\"chunk_size\"].getValue()))\n\nwith open(json_file, \"w\") as file:\n    json.dump(data, file)\nUpdate_Run_cmd_file()\n    \n"
  tile_color 0xbf7fffff
  label "Robust Video\nMatting v1.0\n"
- selected true
- xpos -1187
- ypos -519
+ xpos -1190
+ ypos -520
  addUserKnob {20 User l "Km Robust Video Matting"}
  addUserKnob {26 title l " " T "<font size='5'><b>   KM Robust Video Matting </b></font> <br>\n"}
  addUserKnob {4 pulldown_node_input l Input M {"Node Input" "File Path" "" "" "" ""}}
@@ -85,7 +84,7 @@ Group {
  addUserKnob {26 text_2 l "<b> Requirements </b>" T "Python >= 3.9.0 | av >= 8.0.3 | torch >= 1.9.0 <br>\ntorchvision >= 0.10.0 | \ntqdm >= 4.61.1 | \npims >= 0.5 \n<br>"}
  addUserKnob {26 text_depend_info l " <b>Your System </b>" T "Click bellow button to check"}
  addUserKnob {26 text l " " T " "}
- addUserKnob {22 btn_Check l "Check Dependencies" T "import json\nimport os\nimport subprocess\n\n\nPlugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\n#ssss = \"C:/Users/%USERNAME%/miniconda3/python.exe\"\nwith open(json_file, 'r') as f:\n    data = json.load(f)\npython_path = \"\\\"\" + data\[\"python_path\"] + \"\\\"\"\n\n\npython_version = \"\"\npytorch_version = \"\"\ntorchvision_version = \"\"\ntqdm_version = \"\"\npims_version = \"\"\nav_version = \"\"\n# check python \np = subprocess.Popen(python_path +' --version', stdout=subprocess.PIPE, shell=True)\n(output, err) = p.communicate()  \np_status = p.wait()\n\n\nif p.returncode == 0: # if python exist\n  python_version = output\n  p = subprocess.Popen(python_path +' -c \"import torch; print(torch.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    pytorch_version = output\n  else:\n     pytorch_version = \"not found\"\n  print(\"pytorch_version: \" + pytorch_version)\n  p = subprocess.Popen(python_path +' -c \"import torchvision; print(torchvision.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    torchvision_version = output\n  else:\n     torchvision_version = \"not found\"\n  p = subprocess.Popen(python_path +' -c \"import tqdm; print(tqdm.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    tqdm_version = output\n  else:\n     tqdm_version = \"not found\"\n  p = subprocess.Popen(python_path +' -c \"import pims; print(pims.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    pims_version = output\n  else:\n     pims_version = \"not found\"\n\n\n  p = subprocess.Popen(python_path +' -c \"import av; print(av.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    av_version = output\n  else:\n     av_version = \"not found\"\nelse:\n  python_version = \"Python not found\"\n  pytorch_version = \"not found\"\n  torchvision_version = \"not found\"\n  tqdm_version = \"not found\"\n  pims_version = \"not found\"\n  av_version = \"not found\"\n\n\n\ndependencies_str = \"\"\"<html>\n %s | av %s | torch %s<br> torchvision %s | tqdm %s | pims %s\n\"\"\" % (\n    python_version,\n    av_version,\n    pytorch_version,\n    torchvision_version,\n    tqdm_version,\n    pims_version\n)\n\n\n#print(dependencies_str)\nnuke.thisNode()\[\"text_depend_info\"].setValue(dependencies_str)" +STARTLINE}
+ addUserKnob {22 btn_Check l "Check Dependencies" T "import json\nimport os\nimport subprocess\n\n\n\nPlugin_Path = os.environ\['Km_RVM_Plugin_Path']\njson_file = Plugin_Path +\"/params.json\"\n#ssss = \"C:/Users/%USERNAME%/miniconda3/python.exe\"\nwith open(json_file, 'r') as f:\n    data = json.load(f)\npython_path = \"\\\"\" + data\[\"python_path\"] + \"\\\"\"\n\n\n\npython_version = \"\"\npytorch_version = \"\"\ntorchvision_version = \"\"\ntqdm_version = \"\"\npims_version = \"\"\nav_version = \"\"\n# check python \np = subprocess.Popen(python_path +' --version', stdout=subprocess.PIPE, shell=True)\n(output, err) = p.communicate()  \np_status = p.wait()\n\n\n\nif p.returncode == 0: # if python exist\n  python_version = output.decode('utf-8')\n  p = subprocess.Popen(python_path +' -c \"import torch; print(torch.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    pytorch_version = output.decode('utf-8')\n  else:\n     pytorch_version = \"not found\"\n  #print(\"pytorch_version: \" + str(pytorch_version))\n  p = subprocess.Popen(python_path +' -c \"import torchvision; print(torchvision.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    torchvision_version = output.decode('utf-8')\n  else:\n     torchvision_version = \"not found\"\n  p = subprocess.Popen(python_path +' -c \"import tqdm; print(tqdm.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    tqdm_version = output.decode('utf-8')\n  else:\n     tqdm_version = \"not found\"\n  p = subprocess.Popen(python_path +' -c \"import pims; print(pims.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    pims_version = output.decode('utf-8')\n  else:\n     pims_version = \"not found\"\n\n\n\n  p = subprocess.Popen(python_path +' -c \"import av; print(av.__version__)\"', stdout=subprocess.PIPE, shell=True)\n  (output, err) = p.communicate()  \n  p_status = p.wait()\n  if p.returncode == 0:\n    av_version = output.decode('utf-8')\n  else:\n     av_version = \"not found\"\nelse:\n  python_version = \"Python not found\"\n  pytorch_version = \"not found\"\n  torchvision_version = \"not found\"\n  tqdm_version = \"not found\"\n  pims_version = \"not found\"\n  av_version = \"not found\"\n\n\n\n\ndependencies_str = \"\"\"<html>\n %s | av %s | torch %s<br> torchvision %s | tqdm %s | pims %s\n\"\"\" % (\n    python_version,\n    av_version,\n    pytorch_version,\n    torchvision_version,\n    tqdm_version,\n    pims_version\n)\n\n\n\n#print(dependencies_str)\nnuke.thisNode()\[\"text_depend_info\"].setValue(dependencies_str)" +STARTLINE}
  addUserKnob {26 text_4 l " " T "(It takes a few seconds to check)"}
  addUserKnob {26 text_Dependencies_Guide l " " T "<br><b>Dependencies Installation Guide : </b><br><br><a style=\"text-decoration:none;color :white\" href=\"https://github.com/hkaramian/RobustVideoMatting-For-Nuke\">github.com/hkaramian/RobustVideoMatting-For-Nuke</a>"}
  addUserKnob {26 ""}
@@ -117,7 +116,7 @@ Group {
   xpos 159
   ypos 50
  }
-set N1236c800 [stack 0]
+set N2b4ec800 [stack 0]
  NoOp {
   name Result
   xpos 159
@@ -134,7 +133,7 @@ set N1236c800 [stack 0]
   xpos 34
   ypos -11
  }
-set N1da83400 [stack 0]
+set N37073400 [stack 0]
  Switch {
   inputs 2
   name Switch_output
@@ -146,15 +145,15 @@ set N1da83400 [stack 0]
   xpos 0
   ypos 332
  }
-push $N1236c800
-push $N1da83400
+push $N2b4ec800
+push $N37073400
  Switch {
   inputs 2
   name Switch_iteration
   xpos 159
   ypos -14
  }
-push $N1da83400
+push $N37073400
  Write {
   file "\[python \{nuke.script_directory() + \"/\"+nuke.thisGroup().name()+\"_Data\"\}]/Temp/Input_image_#####.png"
   file_type png
