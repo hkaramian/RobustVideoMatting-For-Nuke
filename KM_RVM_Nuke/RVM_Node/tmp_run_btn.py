@@ -137,6 +137,27 @@ def CreateReadNode():
     fileName = alpha_output_path + "####.png"
     isSequence = True
     readNode = nuke.createNode("Read",inpanel=False)
+    readNode.setXpos(ref_node.xpos())
+    readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)
+
+    # using v!ctor tools code(by Victor Perez ) for creating read node for sequence . https://www.nukepedia.com/gizmos/image/vctor-tools
+    readNode.knob('file').setValue(fileName)
+    cleanPath = nukescripts.replaceHashes(fileName) 
+    padRE = re.compile('%0(\d+)d') 
+    padMatch = padRE.search(cleanPath)         
+    if padMatch: 
+        padSize = int(padMatch.group(1)) 
+        frameList = sorted(glob.iglob(padRE.sub('[0-9]' * padSize, cleanPath))) 
+        first = os.path.splitext(frameList[0])[0][-padSize:] 
+        last = os.path.splitext(frameList[-1])[0][-padSize:] 
+        if platform.system() == "Windows":
+            readNode['file'].fromUserText('%s %s-%s' % (cleanPath, first, last))
+        else : # for linux
+            readNode['file'].fromUserText(cleanPath)
+            readNode['first'].setValue(int(nuke.root()["first_frame"].getValue())) # code above doesn't work properly for linux so we set first & last from project
+            readNode['last'].setValue(int(nuke.root()["last_frame"].getValue()))
+            readNode['origfirst'].setValue(int(nuke.root()["first_frame"].getValue()))
+            readNode['origlast'].setValue(int(nuke.root()["last_frame"].getValue()))
 
 
     readNode.knob('frame_mode').setValue("start at")
@@ -150,8 +171,7 @@ def CreateReadNode():
     # set position
     #print("read node name :" + readNode.name())
     #print("ref node name :" + ref_node.name())
-    readNode.setXpos(ref_node.xpos())
-    readNode.setYpos(ref_node.ypos() + ref_node.screenHeight() + 50)
+
     #print("start create shuffle")
     # Create the Shuffle node
     shuffle2_node = nuke.createNode('Shuffle2',inpanel=False)
@@ -160,26 +180,6 @@ def CreateReadNode():
     mapping = zip([0, 0, 0, 0], layers_in, layers_out)
     shuffle2_node['mappings'].setValue(mapping)
     shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 30)
-
-
-    if isSequence : # using v!ctor tools code(by Victor Perez ) for creating read node for sequence . https://www.nukepedia.com/gizmos/image/vctor-tools
-        readNode.knob('file').setValue(fileName)
-        cleanPath = nukescripts.replaceHashes(fileName) 
-        padRE = re.compile('%0(\d+)d') 
-        padMatch = padRE.search(cleanPath)         
-        if padMatch: 
-            padSize = int(padMatch.group(1)) 
-            frameList = sorted(glob.iglob(padRE.sub('[0-9]' * padSize, cleanPath))) 
-            first = os.path.splitext(frameList[0])[0][-padSize:] 
-            last = os.path.splitext(frameList[-1])[0][-padSize:] 
-            if platform.system() == "Windows":
-                readNode['file'].fromUserText('%s %s-%s' % (cleanPath, first, last))
-            else : # for linux
-                readNode['file'].fromUserText(cleanPath)
-                readNode['first'].setValue(int(nuke.root()["first_frame"].getValue())) # code above doesn't work properly for linux so we set first & last from project
-                readNode['last'].setValue(int(nuke.root()["last_frame"].getValue()))
-                readNode['origfirst'].setValue(int(nuke.root()["first_frame"].getValue()))
-                readNode['origlast'].setValue(int(nuke.root()["last_frame"].getValue()))
 
     #print("CreateReadNode end")
 
