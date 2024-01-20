@@ -175,10 +175,9 @@ def CreateReadNode():
     #print("start create shuffle")
     # Create the Shuffle node
     shuffle2_node = nuke.createNode('Shuffle2',inpanel=False)
-    layers_in =  ['rgba.red', 'rgba.red', 'rgba.red', 'rgba.red']
-    layers_out = ['rgba.red', 'rgba.green', 'rgba.blue', 'rgba.alpha']
-    mapping = zip([0, 0, 0, 0], layers_in, layers_out)
-    shuffle2_node['mappings'].setValue(mapping)
+    shuffle2_node['mappings'].setValue('rgba.red','rgba.green')
+    shuffle2_node['mappings'].setValue('rgba.red','rgba.blue')
+    shuffle2_node['mappings'].setValue('rgba.red','rgba.alpha')
     shuffle2_node.setYpos(readNode.ypos() + readNode.screenHeight() + 30)
 
     #print("CreateReadNode end")
