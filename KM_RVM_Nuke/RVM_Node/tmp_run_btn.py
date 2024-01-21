@@ -63,7 +63,7 @@ def rvm_status_update():
             data = json.load(f)
         processIsDone = data["process_is_done"]
     #print("loop ended")
-    nuke.executeInMainThread( CreateReadNode, args=() )
+    nuke.executeInMainThread( CreateReadNode, args=(start_frame_number) )
 
 
 
@@ -131,7 +131,7 @@ if readyToRun :
 
 
 
-def CreateReadNode():
+def CreateReadNode(start_frame_number):
     global ref_node
     #print("CreateReadNode start")
     fileName = alpha_output_path + "####.png"
@@ -162,6 +162,7 @@ def CreateReadNode():
 
     readNode.knob('frame_mode').setValue("start at")
     if InputIsNodeInput:
+        print(str(start_frame_number))
         readNode.knob('frame').setValue(str(start_frame_number))
     else:
         start_frame_number = nuke.getInput('Set Start At Frame', '1')
