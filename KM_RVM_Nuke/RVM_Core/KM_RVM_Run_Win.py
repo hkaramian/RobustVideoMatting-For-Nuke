@@ -21,7 +21,7 @@ if (loaded_data["device_GPU"]):
         device_GPU = True
         print("Device : GPU")
     else:
-        print("Device : CPU (GPU was selected, but Cuda device is not available on this machine)")
+        print("Device : CPU (GPU is selected, but Cuda device is not available on this machine)")
 else:
     print("Device : CPU")
 
