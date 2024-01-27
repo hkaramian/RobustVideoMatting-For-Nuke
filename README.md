@@ -7,7 +7,7 @@ Robust Video Matting Plugin for Foundry Nuke
     </a>
 </p>
 
-[Robust Video Matting (RVM)](https://github.com/PeterL1n/RobustVideoMatting)  is specifically designed for robust human video matting. Unlike existing neural models that process frames as independent images, RVM uses a recurrent neural network to process videos with temporal memory. Since RVM uses RNN, it gives better result compare to modnet that uses CNN. CNNs have to process each frame sepearately, but an RNN can process the current frame and frames around.
+Robust Video Matting (RVM) is specifically designed for robust human video matting. Unlike existing neural models that process frames as independent images, RVM uses a recurrent neural network to process videos with temporal memory. Since RVM uses RNN, it gives better result compare to modnet that uses CNN. CNNs have to process each frame sepearately, but an RNN can process the current frame and frames around.
 
 <br>
 
@@ -99,5 +99,6 @@ Use this table to find out which version of pytorch cuda you need
 | NVIDIA GeForce GTX 1080 | 6.1 | 11.2 | cu112 |
 | NVIDIA GeForce 840M | 5.0 | 10.2 | cu102 |
  
-
-
+## RVM Main Repo
+You can access main repo from here : 
+[Robust Video Matting ](https://github.com/PeterL1n/RobustVideoMatting)  
