@@ -16,6 +16,7 @@
 """
 Changes Log :
 v1.0 | first release
+v0.8 | fix minor bugs
 v0.7 | cleaning code
 v0.6 | create read node from output, and set start frame (if input is file input, user needs to set start frame)
 v0.5 | add file input
