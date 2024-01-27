@@ -11,7 +11,7 @@ Robust Video Matting Plugin for Foundry Nuke
 
 <br>
 
-Watch the video ([YouTube](https://youtu.be/yTpHI3p5pHE))  to see the installation, usage and model's performance. 
+Watch the video ([YouTube](https://youtu.be/wFPqAqWh9pk))  to see the installation, usage and model's performance. 
 
 
 ## Installation
