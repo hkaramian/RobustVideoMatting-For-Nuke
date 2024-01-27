@@ -7,7 +7,7 @@ Robust Video Matting Plugin for Foundry Nuke
     </a>
 </p>
 
-Robust Video Matting (RVM) is specifically designed for robust human video matting. Unlike existing neural models that process frames as independent images, RVM uses a recurrent neural network to process videos with temporal memory. Since RVM uses RNN, it gives better result compare to modnet that uses CNN. CNNs have to process each frame sepearately, but an RNN can process the current frame and frames around.
+Robust Video Matting (RVM) is specifically designed for robust human video matting. Unlike existing neural models that process frames as independent images, RVM uses a recurrent neural network to process videos with temporal memory. Since RVM uses RNN, it gives better result compare to modnet that uses CNN. CNNs have to process each frame separately, but an RNN can process the current frame and frames around.
 
 <br>
 
